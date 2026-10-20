@@ -1279,21 +1279,6 @@
    "moment": "down 9\u20132, top of the 9th, no outs, bases empty"
   },
   {
-   "game_id": "DET191105130",
-   "date": "1911-05-13",
-   "year": 1911,
-   "away": "Boston (AL)",
-   "home": "Detroit",
-   "away_runs": 13,
-   "home_runs": 11,
-   "winner": "Boston (AL)",
-   "loser": "Detroit",
-   "winner_runs": 13,
-   "loser_runs": 11,
-   "low": 0.000571,
-   "moment": "down 10\u20134, top of the 9th, one out, bases empty"
-  },
-  {
    "game_id": "ATL202506050",
    "date": "2025-06-05",
    "year": 2025,
@@ -1305,6 +1290,21 @@
    "loser": "Atlanta",
    "winner_runs": 11,
    "loser_runs": 10,
+   "low": 0.000571,
+   "moment": "down 10\u20134, top of the 9th, one out, bases empty"
+  },
+  {
+   "game_id": "DET191105130",
+   "date": "1911-05-13",
+   "year": 1911,
+   "away": "Boston (AL)",
+   "home": "Detroit",
+   "away_runs": 13,
+   "home_runs": 11,
+   "winner": "Boston (AL)",
+   "loser": "Detroit",
+   "winner_runs": 13,
+   "loser_runs": 11,
    "low": 0.000571,
    "moment": "down 10\u20134, top of the 9th, one out, bases empty"
   },
@@ -1444,21 +1444,6 @@
    "moment": "down 11\u20134, top of the 8th, two outs, runner on first"
   },
   {
-   "game_id": "ATL199405100",
-   "date": "1994-05-10",
-   "year": 1994,
-   "away": "Philadelphia",
-   "home": "Atlanta",
-   "away_runs": 8,
-   "home_runs": 9,
-   "winner": "Atlanta",
-   "loser": "Philadelphia",
-   "winner_runs": 9,
-   "loser_runs": 8,
-   "low": 0.000759,
-   "moment": "down 8\u20131, top of the 9th, no outs, bases empty"
-  },
-  {
    "game_id": "CAL198608290",
    "date": "1986-08-29",
    "year": 1986,
@@ -1472,6 +1457,21 @@
    "loser_runs": 12,
    "low": 0.000759,
    "moment": "down 12\u20135, top of the 9th, no outs, bases empty"
+  },
+  {
+   "game_id": "ATL199405100",
+   "date": "1994-05-10",
+   "year": 1994,
+   "away": "Philadelphia",
+   "home": "Atlanta",
+   "away_runs": 8,
+   "home_runs": 9,
+   "winner": "Atlanta",
+   "loser": "Philadelphia",
+   "winner_runs": 9,
+   "loser_runs": 8,
+   "low": 0.000759,
+   "moment": "down 8\u20131, top of the 9th, no outs, bases empty"
   },
   {
    "game_id": "ARI201109270",

@@ -11,8 +11,8 @@
   "shrink_strengths": {
    "k": 34.10872,
    "bb": 79.465133,
-   "hr": 79.15614,
-   "babip": 605.931125
+   "hr": 79.156141,
+   "babip": 605.929051
   },
   "methods": {
    "Back of the card: OPS+": {
@@ -227,7 +227,7 @@
   "shrink_strengths": {
    "k": 102.940501,
    "bb": 147.999899,
-   "hr": 919.562024
+   "hr": 919.558875
   },
   "methods": {
    "Back of the card: ERA-": {

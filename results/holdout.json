@@ -353,10 +353,10 @@
     }
    ],
    "prior_strengths": {
-    "bottom+diff": 0.654827,
-    "inning+bottom+diff": 35.879266,
-    "inning+bottom+outs+diff": 465.655291,
-    "inning+bottom+outs+b1+b2+b3+diff": 59.776675
+    "bottom+diff": 0.65482,
+    "inning+bottom+diff": 35.879267,
+    "inning+bottom+outs+diff": 465.652097,
+    "inning+bottom+outs+b1+b2+b3+diff": 59.776678
    },
    "bootstrap": {
     "log_loss_95": [
