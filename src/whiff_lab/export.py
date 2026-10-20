@@ -36,9 +36,20 @@ RESULTS = ROOT / "results"
 CELLS_PER_INNING = 2 * 3 * 8 * (2 * MAX_DIFF + 1)
 
 
+def rounded(obj, digits: int = 6):
+    """Floats to a few decimals, so a rebuild on another machine writes the same files."""
+    if isinstance(obj, float):
+        return round(obj, digits)
+    if isinstance(obj, dict):
+        return {k: rounded(v, digits) for k, v in obj.items()}
+    if isinstance(obj, list | tuple):
+        return [rounded(v, digits) for v in obj]
+    return obj
+
+
 def write(path: Path, obj) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(obj, separators=(",", ":")) + "\n")
+    path.write_text(json.dumps(rounded(obj), separators=(",", ":"), sort_keys=True) + "\n")
 
 
 def era_case(column: str = "g.year") -> str:
@@ -90,6 +101,7 @@ def examples() -> pd.DataFrame:
         from '{WORK / "pa.parquet"}' p join '{WORK / "games.parquet"}' g using (game_id)
         where g.used
         group by all
+        order by era, idx, g.home_win
     """).df()
 
 
@@ -273,5 +285,5 @@ def run() -> dict:
     f["summary"] = summary()
     write(SITE_DATA / "findings.json", f)
     RESULTS.mkdir(exist_ok=True)
-    (RESULTS / "findings.json").write_text(json.dumps(f, indent=1) + "\n")
+    (RESULTS / "findings.json").write_text(json.dumps(rounded(f), indent=1) + "\n")
     return f

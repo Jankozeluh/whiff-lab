@@ -250,64 +250,64 @@ L 493.449844 161.67325
    </g>
    <g id="patch_3">
     <path d="M -931.091333 44.15325 
-L 387.606929 44.15325 
-L 387.606929 57.326583 
+L 387.606434 44.15325 
+L 387.606434 57.326583 
 L -931.091333 57.326583 
 z
 " clip-path="url(#pc12e48e2a6)" style="fill: #e3dfd7"/>
    </g>
    <g id="patch_4">
     <path d="M -931.091333 78.819917 
-L 377.335943 78.819917 
-L 377.335943 91.99325 
+L 377.335952 78.819917 
+L 377.335952 91.99325 
 L -931.091333 91.99325 
 z
 " clip-path="url(#pc12e48e2a6)" style="fill: #e3dfd7"/>
    </g>
    <g id="patch_5">
     <path d="M -931.091333 113.486583 
-L 333.241462 113.486583 
-L 333.241462 126.659917 
+L 333.241807 113.486583 
+L 333.241807 126.659917 
 L -931.091333 126.659917 
 z
 " clip-path="url(#pc12e48e2a6)" style="fill: #e3dfd7"/>
    </g>
    <g id="patch_6">
     <path d="M -931.091333 148.15325 
-L 381.08283 148.15325 
-L 381.08283 161.326583 
+L 381.083414 148.15325 
+L 381.083414 161.326583 
 L -931.091333 161.326583 
 z
 " clip-path="url(#pc12e48e2a6)" style="fill: #e3dfd7"/>
    </g>
    <g id="patch_7">
     <path d="M -931.091333 58.019917 
-L 352.035421 58.019917 
-L 352.035421 71.19325 
+L 352.03656 58.019917 
+L 352.03656 71.19325 
 L -931.091333 71.19325 
 z
 " clip-path="url(#pc12e48e2a6)" style="fill: #d0612a"/>
    </g>
    <g id="patch_8">
     <path d="M -931.091333 92.686583 
-L 345.170174 92.686583 
-L 345.170174 105.859917 
+L 345.171191 92.686583 
+L 345.171191 105.859917 
 L -931.091333 105.859917 
 z
 " clip-path="url(#pc12e48e2a6)" style="fill: #d0612a"/>
    </g>
    <g id="patch_9">
     <path d="M -931.091333 127.35325 
-L 310.282714 127.35325 
-L 310.282714 140.526583 
+L 310.283718 127.35325 
+L 310.283718 140.526583 
 L -931.091333 140.526583 
 z
 " clip-path="url(#pc12e48e2a6)" style="fill: #d0612a"/>
    </g>
    <g id="patch_10">
     <path d="M -931.091333 162.019917 
-L 291.624419 162.019917 
-L 291.624419 175.19325 
+L 291.624526 162.019917 
+L 291.624526 175.19325 
 L -931.091333 175.19325 
 z
 " clip-path="url(#pc12e48e2a6)" style="fill: #d0612a"/>
@@ -323,28 +323,28 @@ L 493.449844 181.74525
 " style="fill: none; stroke: #64615b; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
    </g>
    <g id="text_15">
-    <text style="font-size: 8px; font-family: Archivo, 'Arial Narrow', sans-serif; text-anchor: start; fill: #1c1e21" x="387.606929" y="52.818042" transform="rotate(-0 387.606929 52.818042)"> 0.574</text>
+    <text style="font-size: 8px; font-family: Archivo, 'Arial Narrow', sans-serif; text-anchor: start; fill: #1c1e21" x="387.606434" y="52.818042" transform="rotate(-0 387.606434 52.818042)"> 0.574</text>
    </g>
    <g id="text_16">
-    <text style="font-size: 8px; font-family: Archivo, 'Arial Narrow', sans-serif; text-anchor: start; fill: #1c1e21" x="352.035421" y="66.684708" transform="rotate(-0 352.035421 66.684708)"> 0.558</text>
+    <text style="font-size: 8px; font-family: Archivo, 'Arial Narrow', sans-serif; text-anchor: start; fill: #1c1e21" x="352.03656" y="66.684708" transform="rotate(-0 352.03656 66.684708)"> 0.558</text>
    </g>
    <g id="text_17">
-    <text style="font-size: 8px; font-family: Archivo, 'Arial Narrow', sans-serif; text-anchor: start; fill: #1c1e21" x="377.335943" y="87.484708" transform="rotate(-0 377.335943 87.484708)"> 0.569</text>
+    <text style="font-size: 8px; font-family: Archivo, 'Arial Narrow', sans-serif; text-anchor: start; fill: #1c1e21" x="377.335952" y="87.484708" transform="rotate(-0 377.335952 87.484708)"> 0.569</text>
    </g>
    <g id="text_18">
-    <text style="font-size: 8px; font-family: Archivo, 'Arial Narrow', sans-serif; text-anchor: start; fill: #1c1e21" x="345.170174" y="101.351375" transform="rotate(-0 345.170174 101.351375)"> 0.555</text>
+    <text style="font-size: 8px; font-family: Archivo, 'Arial Narrow', sans-serif; text-anchor: start; fill: #1c1e21" x="345.171191" y="101.351375" transform="rotate(-0 345.171191 101.351375)"> 0.555</text>
    </g>
    <g id="text_19">
-    <text style="font-size: 8px; font-family: Archivo, 'Arial Narrow', sans-serif; text-anchor: start; fill: #1c1e21" x="333.241462" y="122.151375" transform="rotate(-0 333.241462 122.151375)"> 0.550</text>
+    <text style="font-size: 8px; font-family: Archivo, 'Arial Narrow', sans-serif; text-anchor: start; fill: #1c1e21" x="333.241807" y="122.151375" transform="rotate(-0 333.241807 122.151375)"> 0.550</text>
    </g>
    <g id="text_20">
-    <text style="font-size: 8px; font-family: Archivo, 'Arial Narrow', sans-serif; text-anchor: start; fill: #1c1e21" x="310.282714" y="136.018042" transform="rotate(-0 310.282714 136.018042)"> 0.540</text>
+    <text style="font-size: 8px; font-family: Archivo, 'Arial Narrow', sans-serif; text-anchor: start; fill: #1c1e21" x="310.283718" y="136.018042" transform="rotate(-0 310.283718 136.018042)"> 0.540</text>
    </g>
    <g id="text_21">
-    <text style="font-size: 8px; font-family: Archivo, 'Arial Narrow', sans-serif; text-anchor: start; fill: #1c1e21" x="381.08283" y="156.818042" transform="rotate(-0 381.08283 156.818042)"> 0.571</text>
+    <text style="font-size: 8px; font-family: Archivo, 'Arial Narrow', sans-serif; text-anchor: start; fill: #1c1e21" x="381.083414" y="156.818042" transform="rotate(-0 381.083414 156.818042)"> 0.571</text>
    </g>
    <g id="text_22">
-    <text style="font-size: 8px; font-family: Archivo, 'Arial Narrow', sans-serif; text-anchor: start; fill: #1c1e21" x="291.624419" y="170.684708" transform="rotate(-0 291.624419 170.684708)"> 0.532</text>
+    <text style="font-size: 8px; font-family: Archivo, 'Arial Narrow', sans-serif; text-anchor: start; fill: #1c1e21" x="291.624526" y="170.684708" transform="rotate(-0 291.624526 170.684708)"> 0.532</text>
    </g>
    <g id="legend_1">
     <g id="patch_13">

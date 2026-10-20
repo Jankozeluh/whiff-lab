@@ -6,28 +6,28 @@
  "models": [
   {
    "name": "Home share only",
-   "log_loss": 0.7005819943489688,
-   "brier": 0.25371305782276166
+   "log_loss": 0.700582,
+   "brier": 0.253713
   },
   {
    "name": "Lookup table",
-   "log_loss": 0.5584525042490853,
-   "brier": 0.19199663315131937
+   "log_loss": 0.558453,
+   "brier": 0.191997
   },
   {
    "name": "Shrunk table (empirical Bayes)",
-   "log_loss": 0.5554645573023061,
-   "brier": 0.19115221867874505
+   "log_loss": 0.555465,
+   "brier": 0.191152
   },
   {
    "name": "Logistic regression",
-   "log_loss": 0.5402805633028777,
-   "brier": 0.1840552158421243
+   "log_loss": 0.540281,
+   "brier": 0.184055
   },
   {
    "name": "Gradient boosting",
-   "log_loss": 0.532159953276521,
-   "brier": 0.18123044645944966
+   "log_loss": 0.53216,
+   "brier": 0.18123
   }
  ]
 }

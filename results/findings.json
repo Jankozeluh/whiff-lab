@@ -1,5 +1,5 @@
 {
- "comeback_rpg_r": 0.7595904208390938,
+ "comeback_rpg_r": 0.75959,
  "seasons": [
   {
    "year": 1901,
@@ -1140,7 +1140,7 @@
    "loser": "Cincinnati",
    "winner_runs": 9,
    "loser_runs": 8,
-   "low": 6.946398153639954e-05,
+   "low": 6.9e-05,
    "moment": "down 8\u20132, top of the 9th, two outs, bases empty"
   },
   {
@@ -1155,7 +1155,7 @@
    "loser": "Cleveland",
    "winner_runs": 17,
    "loser_runs": 15,
-   "low": 8.538920055266877e-05,
+   "low": 8.5e-05,
    "moment": "down 15\u20134, top of the 8th, two outs, runner on second"
   },
   {
@@ -1170,7 +1170,7 @@
    "loser": "Los Angeles",
    "winner_runs": 12,
    "loser_runs": 11,
-   "low": 0.00019474665650676126,
+   "low": 0.000195,
    "moment": "down 11\u20133, bottom of the 8th, one out, bases empty"
   },
   {
@@ -1185,7 +1185,7 @@
    "loser": "Philadelphia (AL)",
    "winner_runs": 12,
    "loser_runs": 11,
-   "low": 0.00021678143889758417,
+   "low": 0.000217,
    "moment": "down 11\u20133, bottom of the 8th, two outs, runners on first and second"
   },
   {
@@ -1200,7 +1200,7 @@
    "loser": "Houston",
    "winner_runs": 9,
    "loser_runs": 8,
-   "low": 0.0002326137885838704,
+   "low": 0.000233,
    "moment": "down 8\u20132, bottom of the 9th, two outs, bases empty"
   },
   {
@@ -1215,7 +1215,7 @@
    "loser": "Washington",
    "winner_runs": 13,
    "loser_runs": 12,
-   "low": 0.00027599264723450245,
+   "low": 0.000276,
    "moment": "down 12\u20135, bottom of the 9th, two outs, runner on first"
   },
   {
@@ -1230,7 +1230,7 @@
    "loser": "Kansas City",
    "winner_runs": 9,
    "loser_runs": 8,
-   "low": 0.0003695971107806617,
+   "low": 0.00037,
    "moment": "down 8\u20133, top of the 9th, two outs, runner on first"
   },
   {
@@ -1245,7 +1245,7 @@
    "loser": "New York (AL)",
    "winner_runs": 14,
    "loser_runs": 12,
-   "low": 0.0003960445973578697,
+   "low": 0.000396,
    "moment": "down 12\u20133, top of the 8th, one out, bases empty"
   },
   {
@@ -1260,7 +1260,7 @@
    "loser": "Seattle",
    "winner_runs": 15,
    "loser_runs": 14,
-   "low": 0.0004568250396051593,
+   "low": 0.000457,
    "moment": "down 14\u20135, top of the 8th, two outs, runner on first"
   },
   {
@@ -1275,23 +1275,8 @@
    "loser": "Washington",
    "winner_runs": 11,
    "loser_runs": 9,
-   "low": 0.0005704569783763214,
+   "low": 0.00057,
    "moment": "down 9\u20132, top of the 9th, no outs, bases empty"
-  },
-  {
-   "game_id": "ATL202506050",
-   "date": "2025-06-05",
-   "year": 2025,
-   "away": "Arizona",
-   "home": "Atlanta",
-   "away_runs": 11,
-   "home_runs": 10,
-   "winner": "Arizona",
-   "loser": "Atlanta",
-   "winner_runs": 11,
-   "loser_runs": 10,
-   "low": 0.0005714038386103182,
-   "moment": "down 10\u20134, top of the 9th, one out, bases empty"
   },
   {
    "game_id": "DET191105130",
@@ -1305,7 +1290,22 @@
    "loser": "Detroit",
    "winner_runs": 13,
    "loser_runs": 11,
-   "low": 0.0005714038386103182,
+   "low": 0.000571,
+   "moment": "down 10\u20134, top of the 9th, one out, bases empty"
+  },
+  {
+   "game_id": "ATL202506050",
+   "date": "2025-06-05",
+   "year": 2025,
+   "away": "Arizona",
+   "home": "Atlanta",
+   "away_runs": 11,
+   "home_runs": 10,
+   "winner": "Arizona",
+   "loser": "Atlanta",
+   "winner_runs": 11,
+   "loser_runs": 10,
+   "low": 0.000571,
    "moment": "down 10\u20134, top of the 9th, one out, bases empty"
   },
   {
@@ -1320,7 +1320,7 @@
    "loser": "Philadelphia (NL)",
    "winner_runs": 11,
    "loser_runs": 8,
-   "low": 0.0005714038386103182,
+   "low": 0.000571,
    "moment": "down 8\u20132, top of the 9th, one out, bases empty"
   },
   {
@@ -1335,7 +1335,7 @@
    "loser": "Pittsburgh",
    "winner_runs": 12,
    "loser_runs": 11,
-   "low": 0.0006171663152957363,
+   "low": 0.000617,
    "moment": "down 11\u20132, bottom of the 7th, one out, runners on first and second"
   },
   {
@@ -1350,7 +1350,7 @@
    "loser": "Houston",
    "winner_runs": 10,
    "loser_runs": 9,
-   "low": 0.0006588009474589569,
+   "low": 0.000659,
    "moment": "down 9\u20132, top of the 9th, two outs, runner on second"
   },
   {
@@ -1365,7 +1365,7 @@
    "loser": "Philadelphia (AL)",
    "winner_runs": 7,
    "loser_runs": 6,
-   "low": 0.0006850854357180932,
+   "low": 0.000685,
    "moment": "down 6\u20131, bottom of the 9th, two outs, bases empty"
   },
   {
@@ -1380,7 +1380,7 @@
    "loser": "Milwaukee",
    "winner_runs": 9,
    "loser_runs": 8,
-   "low": 0.0006850854357180932,
+   "low": 0.000685,
    "moment": "down 8\u20133, bottom of the 9th, two outs, bases empty"
   },
   {
@@ -1395,7 +1395,7 @@
    "loser": "Boston",
    "winner_runs": 13,
    "loser_runs": 11,
-   "low": 0.0006948932346582115,
+   "low": 0.000695,
    "moment": "down 10\u20130, top of the 7th, no outs, bases empty"
   },
   {
@@ -1410,7 +1410,7 @@
    "loser": "Cincinnati",
    "winner_runs": 10,
    "loser_runs": 9,
-   "low": 0.0007033410751003943,
+   "low": 0.000703,
    "moment": "down 9\u20134, top of the 9th, two outs, runners on first and third"
   },
   {
@@ -1425,7 +1425,7 @@
    "loser": "Philadelphia (AL)",
    "winner_runs": 14,
    "loser_runs": 13,
-   "low": 0.0007417888072667273,
+   "low": 0.000742,
    "moment": "down 13\u20133, bottom of the 7th, two outs, runner on first"
   },
   {
@@ -1440,23 +1440,8 @@
    "loser": "Colorado",
    "winner_runs": 16,
    "loser_runs": 12,
-   "low": 0.0007584164224838652,
+   "low": 0.000758,
    "moment": "down 11\u20134, top of the 8th, two outs, runner on first"
-  },
-  {
-   "game_id": "CAL198608290",
-   "date": "1986-08-29",
-   "year": 1986,
-   "away": "Detroit",
-   "home": "California",
-   "away_runs": 12,
-   "home_runs": 13,
-   "winner": "California",
-   "loser": "Detroit",
-   "winner_runs": 13,
-   "loser_runs": 12,
-   "low": 0.0007587154975317282,
-   "moment": "down 12\u20135, top of the 9th, no outs, bases empty"
   },
   {
    "game_id": "ATL199405100",
@@ -1470,8 +1455,23 @@
    "loser": "Philadelphia",
    "winner_runs": 9,
    "loser_runs": 8,
-   "low": 0.0007587154975317282,
+   "low": 0.000759,
    "moment": "down 8\u20131, top of the 9th, no outs, bases empty"
+  },
+  {
+   "game_id": "CAL198608290",
+   "date": "1986-08-29",
+   "year": 1986,
+   "away": "Detroit",
+   "home": "California",
+   "away_runs": 12,
+   "home_runs": 13,
+   "winner": "California",
+   "loser": "Detroit",
+   "winner_runs": 13,
+   "loser_runs": 12,
+   "low": 0.000759,
+   "moment": "down 12\u20135, top of the 9th, no outs, bases empty"
   },
   {
    "game_id": "ARI201109270",
@@ -1485,7 +1485,7 @@
    "loser": "Los Angeles",
    "winner_runs": 7,
    "loser_runs": 6,
-   "low": 0.0007869131543935756,
+   "low": 0.000787,
    "moment": "down 6\u20131, bottom of the 10th, two outs, bases empty"
   },
   {
@@ -1500,13 +1500,13 @@
    "loser": "Pittsburgh",
    "winner_runs": 8,
    "loser_runs": 7,
-   "low": 0.0007878807672636631,
+   "low": 0.000788,
    "moment": "down 7\u20131, bottom of the 9th, two outs, runner on first"
   }
  ],
  "comeback_share": {
-  "under10": 0.08096840294467353,
-  "under1": 0.004255103847807938,
+  "under10": 0.080968,
+  "under1": 0.004255,
   "under_1_in_1000": 35,
   "games": 197645
  },
@@ -2029,42 +2029,42 @@
    "from": 0,
    "to": 0.0001,
    "plate_appearances": 143596,
-   "expected": 3.863422682022502,
+   "expected": 3.863423,
    "happened": 2
   },
   {
    "from": 0.0001,
    "to": 0.0005,
    "plate_appearances": 129365,
-   "expected": 34.538304658346135,
+   "expected": 34.538305,
    "happened": 33
   },
   {
    "from": 0.0005,
    "to": 0.001,
    "plate_appearances": 108557,
-   "expected": 80.45726683343571,
+   "expected": 80.457267,
    "happened": 77
   },
   {
    "from": 0.001,
    "to": 0.005,
    "plate_appearances": 448838,
-   "expected": 1229.3791412079559,
+   "expected": 1229.379141,
    "happened": 1320
   },
   {
    "from": 0.005,
    "to": 0.01,
    "plate_appearances": 392605,
-   "expected": 2989.204133937742,
+   "expected": 2989.204134,
    "happened": 3083
   },
   {
    "from": 0.01,
    "to": 0.02,
    "plate_appearances": 509961,
-   "expected": 7682.004559864044,
+   "expected": 7682.00456,
    "happened": 8249
   }
  ],
@@ -2078,12 +2078,12 @@
   "states_seen": 9005,
   "rpg_low": {
    "year": 1908.0,
-   "rpg": 3.395465994962217,
+   "rpg": 3.395466,
    "games": 1191.0
   },
   "rpg_high": {
    "year": 1930.0,
-   "rpg": 5.580659150043365,
+   "rpg": 5.580659,
    "games": 1153.0
   }
  }

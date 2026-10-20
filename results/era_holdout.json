@@ -3,82 +3,82 @@
   {
    "era": "deadball",
    "name": "Dead ball",
-   "rpg": 3.842208154482447,
+   "rpg": 3.842208,
    "plate_appearances": 1048703,
-   "Lookup table": 0.4743905709495546,
-   "Logistic regression": 0.4754054374346264,
-   "Gradient boosting": 0.47405784417190633,
-   "own era (in-sample)": 0.47018852186512605
+   "Lookup table": 0.474391,
+   "Logistic regression": 0.475405,
+   "Gradient boosting": 0.474058,
+   "own era (in-sample)": 0.470189
   },
   {
    "era": "liveball",
    "name": "Live ball",
-   "rpg": 4.843448463318306,
+   "rpg": 4.843448,
    "plate_appearances": 1973856,
-   "Lookup table": 0.4767409713011823,
-   "Logistic regression": 0.4774733742927113,
-   "Gradient boosting": 0.47720857220544527,
-   "own era (in-sample)": 0.4739165753490349
+   "Lookup table": 0.476741,
+   "Logistic regression": 0.477473,
+   "Gradient boosting": 0.477209,
+   "own era (in-sample)": 0.473917
   },
   {
    "era": "postwar",
    "name": "War and integration",
-   "rpg": 4.357165432257754,
+   "rpg": 4.357165,
    "plate_appearances": 1655780,
-   "Lookup table": 0.47676897221680853,
-   "Logistic regression": 0.47807363521857593,
-   "Gradient boosting": 0.4770249717912844,
-   "own era (in-sample)": 0.47445135938910227
+   "Lookup table": 0.476769,
+   "Logistic regression": 0.478074,
+   "Gradient boosting": 0.477025,
+   "own era (in-sample)": 0.474451
   },
   {
    "era": "expansion",
    "name": "Expansion and the pitchers' peak",
-   "rpg": 4.0180748166640505,
+   "rpg": 4.018075,
    "plate_appearances": 959912,
-   "Lookup table": 0.482557724612143,
-   "Logistic regression": 0.4832319564212439,
-   "Gradient boosting": 0.4826251264343817,
-   "own era (in-sample)": 0.4792856421682231
+   "Lookup table": 0.482558,
+   "Logistic regression": 0.483232,
+   "Gradient boosting": 0.482625,
+   "own era (in-sample)": 0.479286
   },
   {
    "era": "moundlow",
    "name": "Lower mound, the DH",
-   "rpg": 4.225932117204209,
+   "rpg": 4.225932,
    "plate_appearances": 3692025,
-   "Lookup table": 0.4830837371396261,
-   "Logistic regression": 0.48443165709593394,
-   "Gradient boosting": 0.48332924473668787,
-   "own era (in-sample)": 0.48176539469010177
+   "Lookup table": 0.483084,
+   "Logistic regression": 0.484432,
+   "Gradient boosting": 0.483329,
+   "own era (in-sample)": 0.481765
   },
   {
    "era": "offense",
    "name": "High offense",
-   "rpg": 4.82516745661773,
+   "rpg": 4.825167,
    "plate_appearances": 2313611,
-   "Lookup table": 0.4757589940945244,
-   "Logistic regression": 0.47678771505020995,
-   "Gradient boosting": 0.4762211058734335,
-   "own era (in-sample)": 0.4736504006895034
+   "Lookup table": 0.475759,
+   "Logistic regression": 0.476788,
+   "Gradient boosting": 0.476221,
+   "own era (in-sample)": 0.47365
   },
   {
    "era": "strikeout",
    "name": "Strikeouts and relievers",
-   "rpg": 4.488815834875993,
+   "rpg": 4.488816,
    "plate_appearances": 2601150,
-   "Lookup table": 0.46944026989851867,
-   "Logistic regression": 0.4706515807790039,
-   "Gradient boosting": 0.4694730623923988,
-   "own era (in-sample)": 0.46773530982752404
+   "Lookup table": 0.46944,
+   "Logistic regression": 0.470652,
+   "Gradient boosting": 0.469473,
+   "own era (in-sample)": 0.467735
   },
   {
    "era": "runner",
    "name": "Runner on second",
-   "rpg": 4.480036831616354,
+   "rpg": 4.480037,
    "plate_appearances": 966445,
-   "Lookup table": 0.4681684766118345,
-   "Logistic regression": 0.4690288469273444,
-   "Gradient boosting": 0.46830225537295317,
-   "own era (in-sample)": 0.4640079371752736
+   "Lookup table": 0.468168,
+   "Logistic regression": 0.469029,
+   "Gradient boosting": 0.468302,
+   "own era (in-sample)": 0.464008
   }
  ]
 }

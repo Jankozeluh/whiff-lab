@@ -19,6 +19,7 @@ import numpy as np
 import pandas as pd
 
 from whiff_lab.data import ROOT, WORK
+from whiff_lab.export import rounded
 from whiff_lab.features import (
     ERAS,
     MAX_DIFF,
@@ -144,7 +145,7 @@ def holdout() -> dict:
 def save(result: dict, name: str) -> Path:
     RESULTS.mkdir(exist_ok=True)
     path = RESULTS / f"{name}.json"
-    path.write_text(json.dumps(result, indent=1) + "\n")
+    path.write_text(json.dumps(rounded(result), indent=1) + "\n")
     return path
 
 
