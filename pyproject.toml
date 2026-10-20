@@ -3,6 +3,8 @@ name = "whiff-lab"
 version = "0.1.0"
 description = "Open baseball models built only from free, openly licensed data."
 readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
 requires-python = ">=3.13"
 dependencies = [
     "duckdb>=1.1",

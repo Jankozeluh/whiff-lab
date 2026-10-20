@@ -15,13 +15,17 @@ What it found (the numbers are rebuilt every year; the site and `results/` alway
 
 The [lab notes](lab-notes/) explain every step: the data and the parser, the lookup table and how forecasts are scored, empirical Bayes, logistic regression, gradient boosting, and the eras.
 
-## Data and licences
+## Data
 
 - [Retrosheet](https://www.retrosheet.org) play-by-play (regular-season event files, AL and NL, 1908 on) and game logs, from Retrosheet's official releases as mirrored by the [Chadwick Baseball Bureau](https://github.com/chadwickbureau/retrosheet) (branch `official`). The raw files are not in this repository; `whiff-lab fetch` downloads only what it needs and, later, only what changed.
 
   The information used here was obtained free of charge from and is copyrighted by Retrosheet.  Interested parties may contact Retrosheet at "www.retrosheet.org".
 
 - The typeface is [Archivo](https://github.com/Omnibus-Type/Archivo), SIL Open Font License 1.1 (`site/assets/fonts/OFL-Archivo.txt`).
+
+## Licence
+
+The code is under the [MIT licence](LICENSE). The data and everything derived from it (`results/`, `site/data/`) carry Retrosheet's notice above. The Archivo typeface is under the SIL Open Font License. The Daily Whiff mark (`site/assets/whiff-logo-chalk.png`, `site/assets/whiff-site-icon.png`) belongs to The Daily Whiff and is not covered by the MIT licence.
 
 Only free, openly licensed data goes into this lab. If a later experiment needs more, it will be the Lahman Baseball Database (CC BY-SA: derived data shared alike, with attribution) or the Chadwick Register (ODC-By, with attribution).
 

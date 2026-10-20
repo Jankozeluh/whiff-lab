@@ -223,7 +223,7 @@ def layout(
 <div class="lab-legal">
 <p>Whiff Lab, an independent fan project, not affiliated with Major League Baseball or its clubs · Data: Retrosheet's
 official releases (through the Chadwick Baseball Bureau's mirror) · {html.escape(RETROSHEET_NOTICE)} · Typeface:
-Archivo, SIL Open Font License.</p>
+Archivo, SIL Open Font License · Code: <a href="{REPO}/blob/main/LICENSE">MIT licence</a>.</p>
 </div>
 </div></footer>
 <script src="{asset(root, "lab.js")}" defer></script>{scripts}
