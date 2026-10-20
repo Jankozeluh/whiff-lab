@@ -1,8 +1,8 @@
-# Once a month: is there a new Retrosheet release on the Chadwick Bureau's mirror (branch `official`)? If so,
-# fetch only what changed, rebuild everything (parse, test the models, export, the notes and the site) and
-# commit the new results here. Retrosheet publishes a new season around December and corrections now and
-# then, so most months this stops after one `git ls-remote`. Run it by hand from the Actions tab with
-# "force" to rebuild anyway.
+# Once a month: is there a new Retrosheet release on the Chadwick Bureau's mirror (branch `official`), or a new
+# version of the Lahman database on CRAN? If so, fetch only what changed, rebuild everything (parse, test the
+# models, export, the Rookie Report, the notes and the site) and commit the new results here. Retrosheet
+# publishes a new season around December, Lahman early in the year, so most months this stops after two
+# small requests. Run it by hand from the Actions tab with "force" to rebuild anyway.
 name: rebuild
 on:
   schedule:
@@ -24,16 +24,19 @@ jobs:
     timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
-      - name: Has Retrosheet published anything new?
+      - name: Has Retrosheet or the Lahman database published anything new?
         id: check
         run: |
           latest=$(git ls-remote https://github.com/chadwickbureau/retrosheet.git refs/heads/official | cut -f1)
+          lahman=$(curl -fsS https://cran.r-project.org/web/packages/Lahman/index.html | grep -o 'Lahman_[0-9.-]*\.tar\.gz' | head -1)
           built=$(python3 -c "import json; print(json.load(open('results/source.json'))['commit'])")
+          built_lahman=$(python3 -c "import json; print(json.load(open('results/source.json')).get('lahman', ''))")
           echo "latest=$latest" >> "$GITHUB_OUTPUT"
-          if [ "$latest" != "$built" ] || [ "${{ inputs.force }}" = "true" ]; then
-            echo "run=true" >> "$GITHUB_OUTPUT"; echo "Rebuilding: $built -> $latest"
+          echo "lahman=$lahman" >> "$GITHUB_OUTPUT"
+          if [ "$latest" != "$built" ] || { [ -n "$lahman" ] && [ "$lahman" != "$built_lahman" ]; } || [ "${{ inputs.force }}" = "true" ]; then
+            echo "run=true" >> "$GITHUB_OUTPUT"; echo "Rebuilding: Retrosheet $built -> $latest, Lahman $built_lahman -> $lahman"
           else
-            echo "run=false" >> "$GITHUB_OUTPUT"; echo "Nothing new (Retrosheet at $latest)."
+            echo "run=false" >> "$GITHUB_OUTPUT"; echo "Nothing new (Retrosheet at $latest, $lahman)."
           fi
       - if: steps.check.outputs.run == 'true'
         uses: actions/cache@v4
@@ -59,5 +62,5 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add results site lab-notes
           if git diff --cached --quiet; then echo "No change in the results."; exit 0; fi
-          git commit -m "Rebuild from Retrosheet's release ${{ steps.check.outputs.latest }}."
+          git commit -m "Rebuild from Retrosheet's release ${{ steps.check.outputs.latest }} and ${{ steps.check.outputs.lahman }}."
           git push
