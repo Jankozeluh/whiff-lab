@@ -1,0 +1,63 @@
+# Once a month: is there a new Retrosheet release on the Chadwick Bureau's mirror (branch `official`)? If so,
+# fetch only what changed, rebuild everything (parse, test the models, export, the notes and the site) and
+# commit the new results here. Retrosheet publishes a new season around December and corrections now and
+# then, so most months this stops after one `git ls-remote`. Run it by hand from the Actions tab with
+# "force" to rebuild anyway.
+name: rebuild
+on:
+  schedule:
+    - cron: "17 5 15 * *"
+  workflow_dispatch:
+    inputs:
+      force:
+        description: Rebuild even if Retrosheet has not changed
+        type: boolean
+        default: false
+permissions:
+  contents: write
+concurrency:
+  group: rebuild
+  cancel-in-progress: false
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - name: Has Retrosheet published anything new?
+        id: check
+        run: |
+          latest=$(git ls-remote https://github.com/chadwickbureau/retrosheet.git refs/heads/official | cut -f1)
+          built=$(python3 -c "import json; print(json.load(open('results/source.json'))['commit'])")
+          echo "latest=$latest" >> "$GITHUB_OUTPUT"
+          if [ "$latest" != "$built" ] || [ "${{ inputs.force }}" = "true" ]; then
+            echo "run=true" >> "$GITHUB_OUTPUT"; echo "Rebuilding: $built -> $latest"
+          else
+            echo "run=false" >> "$GITHUB_OUTPUT"; echo "Nothing new (Retrosheet at $latest)."
+          fi
+      - if: steps.check.outputs.run == 'true'
+        uses: actions/cache@v4
+        with:
+          path: data/raw/retrosheet
+          key: retrosheet-${{ steps.check.outputs.latest }}
+          restore-keys: retrosheet-
+      - if: steps.check.outputs.run == 'true'
+        uses: astral-sh/setup-uv@v6
+        with:
+          python-version: "3.13"
+      - if: steps.check.outputs.run == 'true'
+        run: uv sync --locked
+      - if: steps.check.outputs.run == 'true'
+        run: uv run whiff-lab all
+      - if: steps.check.outputs.run == 'true'
+        name: The whole-season test, now that the data is here
+        run: uv run pytest -q
+      - if: steps.check.outputs.run == 'true'
+        name: Commit the new results
+        run: |
+          git config user.name "whiff-lab rebuild"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add results site lab-notes
+          if git diff --cached --quiet; then echo "No change in the results."; exit 0; fi
+          git commit -m "Rebuild from Retrosheet's release ${{ steps.check.outputs.latest }}."
+          git push
