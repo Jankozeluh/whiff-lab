@@ -1,5 +1,5 @@
-"""Experiment 2, the test before anything is built: does a model see future stars in a rookie season better
-than the rookie's numbers do?
+"""Experiment 2, the tests before anything is built: does a model see future stars in a rookie season better
+than the rookie's numbers do? And do his pitches (how often his swings miss) add what the card can't show?
 
 A rookie season here is the season a player first goes past 130 at-bats (a hitter) or 50 innings (a pitcher),
 the limits MLB uses for rookie status. The question for each rookie: will he be picked for at least two
@@ -393,5 +393,75 @@ def test(r: pd.DataFrame | None = None) -> dict:
         )
         lr = fits["Model (logistic)"][-1]
         res["coefficients"] = dict(zip(X.columns, map(float, lr.coef_[0]), strict=True))
+        out[kind] = res
+    return out
+
+
+PITCH_FIRST, PITCH_TRAIN_LAST = 1988, 2003
+
+
+def pitch_features(
+    d: pd.DataFrame, counts: pd.DataFrame, kind: str, train: pd.Series
+) -> tuple[pd.DataFrame, dict]:
+    """What the card never shows: how often his swings missed (a hitter), how often he made them miss (a
+    pitcher), how often he swung, how often he threw a ball. Each shrunk toward the league like the rest."""
+    role = "bat" if kind == "hitter" else "pit"
+    c = counts[counts.role == role].rename(columns={"year": "yearID"})
+    league = counts[counts.role == "pit"].groupby("year")[["swings", "misses", "pitches", "balls"]].sum()
+    m = d[["retroID", "yearID"]].merge(c, on=["retroID", "yearID"], how="left").fillna(0)
+    L = league.reindex(d.yearID).reset_index(drop=True)
+    ks = {}
+    out = {}
+    for name, hits, trials, lg in (
+        ("miss", m.misses, m.swings, L.misses / L.swings),
+        ("swing", m.swings, m.pitches, L.swings / L.pitches),
+        ("ball", m.balls, m.pitches, L.balls / L.pitches),
+    ):
+        rate, ks[name] = shrink(hits, trials, lg, train)
+        out[f"{name}_skill"] = rate - lg
+    return pd.DataFrame(out).astype(float), ks
+
+
+def test_pitches(r: pd.DataFrame, counts: pd.DataFrame) -> dict:
+    """The rookies since 1988, with and without what their pitches say. Fit on 1988-2003, score 2004-2016."""
+    r = r[(r.yearID >= PITCH_FIRST) & (r.yearID <= TEST_LAST) & r.age.notna() & r.retroID.notna()]
+    out = {"train": f"{PITCH_FIRST}-{PITCH_TRAIN_LAST}", "test": f"{PITCH_TRAIN_LAST + 1}-{TEST_LAST}"}
+    for kind in ("hitter", "pitcher"):
+        d = r[r.kind == kind].reset_index(drop=True)
+        train = d.yearID <= PITCH_TRAIN_LAST
+        test_ = ~train
+        y, yt = d.star.to_numpy(), d.star.to_numpy()[test_]
+        X, _ = features(d, kind, train)
+        P, ks = pitch_features(d, counts, kind, train)
+        card = pd.concat([d[["age"]].astype(float), back_of_the_card(d, kind)], axis=1)
+        sets = {
+            "Age and the back of the card": card,
+            "Model": X,
+            "Model and the pitches": pd.concat([X, P], axis=1),
+            "Age, the card and the pitches": pd.concat([card, P], axis=1),
+        }
+        res = {
+            "rookies_train": int(train.sum()),
+            "rookies_test": int(test_.sum()),
+            "stars_test": int(yt.sum()),
+            "shrink_strengths": ks,
+            "methods": {},
+        }
+        preds = {}
+        for name, Z in sets.items():
+            fit = _logit(Z[train], y[train])
+            p = np.clip(fit.predict_proba(Z[test_])[:, 1], 1e-6, 1 - 1e-6)
+            preds[name] = p
+            res["methods"][name] = {
+                "log_loss": float(-(yt * np.log(p) + (1 - yt) * np.log(1 - p)).mean()),
+                "auc": float(roc_auc_score(yt, p)),
+                "top5": top_k(d[test_], p),
+            }
+            if name == "Model and the pitches":
+                res["coefficients"] = dict(zip(Z.columns, map(float, fit[-1].coef_[0]), strict=True))
+        res["gap_pitches_vs_model_95"] = bootstrap_gap(yt, preds["Model and the pitches"], preds["Model"])
+        res["gap_pitches_vs_card_95"] = bootstrap_gap(
+            yt, preds["Model and the pitches"], preds["Age and the back of the card"]
+        )
         out[kind] = res
     return out

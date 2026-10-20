@@ -1,0 +1,159 @@
+{
+ "train": "1988-2003",
+ "test": "2004-2016",
+ "hitter": {
+  "rookies_train": 953,
+  "rookies_test": 910,
+  "stars_test": 111,
+  "shrink_strengths": {
+   "miss": 46.540698,
+   "swing": 91.966055,
+   "ball": 203.612575
+  },
+  "methods": {
+   "Age and the back of the card": {
+    "log_loss": 0.283261,
+    "auc": 0.838311,
+    "top5": {
+     "picked": 65,
+     "stars_picked": 34,
+     "stars_all": 111,
+     "hit_rate": 0.523077,
+     "share_of_stars": 0.306306
+    }
+   },
+   "Model": {
+    "log_loss": 0.285365,
+    "auc": 0.828164,
+    "top5": {
+     "picked": 65,
+     "stars_picked": 38,
+     "stars_all": 111,
+     "hit_rate": 0.584615,
+     "share_of_stars": 0.342342
+    }
+   },
+   "Model and the pitches": {
+    "log_loss": 0.284932,
+    "auc": 0.833102,
+    "top5": {
+     "picked": 65,
+     "stars_picked": 41,
+     "stars_all": 111,
+     "hit_rate": 0.630769,
+     "share_of_stars": 0.369369
+    }
+   },
+   "Age, the card and the pitches": {
+    "log_loss": 0.283479,
+    "auc": 0.837229,
+    "top5": {
+     "picked": 65,
+     "stars_picked": 38,
+     "stars_all": 111,
+     "hit_rate": 0.584615,
+     "share_of_stars": 0.342342
+    }
+   }
+  },
+  "coefficients": {
+   "age": -1.37043,
+   "log_pa": 0.754556,
+   "log_pa_before": -0.009907,
+   "defense": 0.013986,
+   "catcher": 0.270941,
+   "sb_rate": 0.141661,
+   "k_skill": -0.629901,
+   "bb_skill": -0.228428,
+   "hr_skill": 0.488226,
+   "babip_skill": 0.135385,
+   "miss_skill": 0.247198,
+   "swing_skill": -0.038287,
+   "ball_skill": 0.409828
+  },
+  "gap_pitches_vs_model_95": [
+   -0.004898,
+   0.003985
+  ],
+  "gap_pitches_vs_card_95": [
+   -0.009301,
+   0.012425
+  ]
+ },
+ "pitcher": {
+  "rookies_train": 1053,
+  "rookies_test": 1056,
+  "stars_test": 66,
+  "shrink_strengths": {
+   "miss": 98.827691,
+   "swing": 433.299463,
+   "ball": 498.465622
+  },
+  "methods": {
+   "Age and the back of the card": {
+    "log_loss": 0.192859,
+    "auc": 0.804346,
+    "top5": {
+     "picked": 65,
+     "stars_picked": 21,
+     "stars_all": 66,
+     "hit_rate": 0.323077,
+     "share_of_stars": 0.318182
+    }
+   },
+   "Model": {
+    "log_loss": 0.188761,
+    "auc": 0.803153,
+    "top5": {
+     "picked": 65,
+     "stars_picked": 23,
+     "stars_all": 66,
+     "hit_rate": 0.353846,
+     "share_of_stars": 0.348485
+    }
+   },
+   "Model and the pitches": {
+    "log_loss": 0.189766,
+    "auc": 0.803352,
+    "top5": {
+     "picked": 65,
+     "stars_picked": 24,
+     "stars_all": 66,
+     "hit_rate": 0.369231,
+     "share_of_stars": 0.363636
+    }
+   },
+   "Age, the card and the pitches": {
+    "log_loss": 0.192284,
+    "auc": 0.800046,
+    "top5": {
+     "picked": 65,
+     "stars_picked": 21,
+     "stars_all": 66,
+     "hit_rate": 0.323077,
+     "share_of_stars": 0.318182
+    }
+   }
+  },
+  "coefficients": {
+   "age": -0.821093,
+   "log_bf": 0.421063,
+   "starter": 0.056026,
+   "log_outs_before": -0.152065,
+   "k_skill": 0.488856,
+   "bb_skill": 0.390689,
+   "hr_skill": -0.138879,
+   "miss_skill": 0.069888,
+   "swing_skill": 0.316269,
+   "ball_skill": -0.186423
+  },
+  "gap_pitches_vs_model_95": [
+   -0.0046,
+   0.006302
+  ],
+  "gap_pitches_vs_card_95": [
+   -0.011477,
+   0.005326
+  ]
+ }
+}

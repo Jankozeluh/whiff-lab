@@ -63,8 +63,11 @@ def main() -> None:
 
             r = rookies(tables(fetch()))
             r.to_parquet(WORK / "rookies.parquet", index=False)
-            res = save(test(r), "rookies_test")
-            print(" ", res)
+            print(" ", save(test(r), "rookies_test"))
+            from whiff_lab.pitches import build as pitch_counts
+            from whiff_lab.rookies import test_pitches
+
+            print(" ", save(test_pitches(r, pitch_counts()), "rookies_pitches_test"))
         elif step == "notes":
             from whiff_lab.site import build_notes
 
