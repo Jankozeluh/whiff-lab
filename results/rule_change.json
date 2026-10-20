@@ -1,0 +1,33 @@
+{
+ "train": "1908-2022",
+ "test": "2023-2025, extra innings",
+ "plate_appearances": 7025,
+ "games": 626,
+ "models": [
+  {
+   "name": "Home share only",
+   "log_loss": 0.7005819943489688,
+   "brier": 0.25371305782276166
+  },
+  {
+   "name": "Lookup table",
+   "log_loss": 0.5584525042490853,
+   "brier": 0.19199663315131937
+  },
+  {
+   "name": "Shrunk table (empirical Bayes)",
+   "log_loss": 0.5554645571242545,
+   "brier": 0.191152218676413
+  },
+  {
+   "name": "Logistic regression",
+   "log_loss": 0.5402805633028775,
+   "brier": 0.18405521584212428
+  },
+  {
+   "name": "Gradient boosting",
+   "log_loss": 0.5321599532782564,
+   "brier": 0.18123044646001915
+  }
+ ]
+}
