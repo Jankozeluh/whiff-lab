@@ -1,0 +1,10 @@
+# Lab notes
+
+How *What are the odds?* was built, one step at a time. Each note is built from `notes/` with the numbers of the latest rebuild filled in.
+
+1. [From scorebooks to fifteen million game states](01-the-data.md): Every model in this lab starts from one question: at this moment of a game, how often did the home team go on to win? To answer it we need the moment, for every plate appearance of every game we can get. This note is about getting it right.
+2. [Step 1: just count](02-the-table.md): The plainest possible model: for each state, the share of games the home team won from it. Home team down a run in the bottom of the 9th, nobody on, nobody out? Find every time it happened and count. No formula, no assumptions. This is the lookup table, and it is the model every other step has to beat.
+3. [Step 2: borrow strength (empirical Bayes)](03-shrinkage.md): A state seen four times tells us something, just not much. The fix is not to throw its record away but to mix it with something steadier: a related state with far more games behind it. This is shrinkage, and choosing how much to shrink from the data itself is called empirical Bayes.
+4. [Step 3: a formula (logistic regression)](04-logistic.md): The table and the shrunk table store one number per state, about nine thousand in all. This step throws the table away and asks: can a handful of numbers, built from what a fan knows about baseball, do the same job?
+5. [Step 4: trees (gradient boosting)](05-boosting.md): The table knows every quirk but no logic; the formula knows the logic but smooths over the quirks. Gradient boosting tries to have both: it starts from nothing, and adds small decision trees one at a time, each one fixing what the trees before it got wrong.
+6. [Eras: what changes, and what doesn't](06-eras.md): Baseball in 1910 and baseball in 2010 are not quite the same game. Scoring has swung from 3.40 runs per team per game (1908) to 5.58 (1930), the ball, the parks and the strategy have changed, and since 2020 even the rules of extra innings. Does a two-run lead in the 7th mean something different in each era?
