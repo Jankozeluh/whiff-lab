@@ -290,8 +290,8 @@ z
    </g>
    <g id="patch_8">
     <path d="M -931.091333 92.686583 
-L 345.170173 92.686583 
-L 345.170173 105.859917 
+L 345.170174 92.686583 
+L 345.170174 105.859917 
 L -931.091333 105.859917 
 z
 " clip-path="url(#pc12e48e2a6)" style="fill: #d0612a"/>
@@ -332,7 +332,7 @@ L 493.449844 181.74525
     <text style="font-size: 8px; font-family: Archivo, 'Arial Narrow', sans-serif; text-anchor: start; fill: #1c1e21" x="377.335943" y="87.484708" transform="rotate(-0 377.335943 87.484708)"> 0.569</text>
    </g>
    <g id="text_18">
-    <text style="font-size: 8px; font-family: Archivo, 'Arial Narrow', sans-serif; text-anchor: start; fill: #1c1e21" x="345.170173" y="101.351375" transform="rotate(-0 345.170173 101.351375)"> 0.555</text>
+    <text style="font-size: 8px; font-family: Archivo, 'Arial Narrow', sans-serif; text-anchor: start; fill: #1c1e21" x="345.170174" y="101.351375" transform="rotate(-0 345.170174 101.351375)"> 0.555</text>
    </g>
    <g id="text_19">
     <text style="font-size: 8px; font-family: Archivo, 'Arial Narrow', sans-serif; text-anchor: start; fill: #1c1e21" x="333.241462" y="122.151375" transform="rotate(-0 333.241462 122.151375)"> 0.550</text>

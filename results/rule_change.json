@@ -16,18 +16,18 @@
   },
   {
    "name": "Shrunk table (empirical Bayes)",
-   "log_loss": 0.5554645571242545,
-   "brier": 0.191152218676413
+   "log_loss": 0.5554645573023061,
+   "brier": 0.19115221867874505
   },
   {
    "name": "Logistic regression",
-   "log_loss": 0.5402805633028773,
-   "brier": 0.18405521584212425
+   "log_loss": 0.5402805633028777,
+   "brier": 0.1840552158421243
   },
   {
    "name": "Gradient boosting",
-   "log_loss": 0.5321599532749933,
-   "brier": 0.181230446458813
+   "log_loss": 0.532159953276521,
+   "brier": 0.18123044645944966
   }
  ]
 }
