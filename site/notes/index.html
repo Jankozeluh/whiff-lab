@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Lab notes · Whiff Lab</title>
-<meta name="description" content="How the win probability models were built and tested, step by step.">
+<meta name="description" content="How the lab&#x27;s models were built and tested, step by step.">
 <link rel="icon" href="../assets/whiff-site-icon.png">
 <link rel="preload" href="../assets/fonts/archivo-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="../assets/lab.css?v=2cb74a474c">
@@ -17,15 +17,18 @@
 <button class="lab-nav__open" type="button" aria-expanded="false" aria-controls="lab-menu" aria-label="Open menu"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7.5h16M4 12h16M4 16.5h16" stroke="currentColor" stroke-width="1.8" fill="none"/></svg></button>
 <div class="lab-nav__panel" id="lab-menu">
 <button class="lab-nav__close" type="button" aria-label="Close menu"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" fill="none"/></svg></button>
-<ul><li><a href="../odds/">What are the odds?</a></li><li><a href="../notes/" aria-current="page">Lab notes</a></li><li><a href="https://thedailywhiff.com/">The Daily Whiff</a></li></ul>
+<ul><li><a href="../odds/">What are the odds?</a></li><li><a href="../rookies/">Rookie Report</a></li><li><a href="../notes/" aria-current="page">Lab notes</a></li><li><a href="https://thedailywhiff.com/">The Daily Whiff</a></li></ul>
 </div>
 </nav>
 </div></header>
 <div class="lab-seam"></div>
 <main class="wrap">
 <h1 class="lab-title">Lab notes</h1>
-<p class="lab-intro">How "What are the odds?" was built, one step at a time, in plain words: the data, four models from the plainest to the strongest, the honest test that compares them, and what the eras change.</p>
-<ol class="lab-notes-list"><li><a href="01-the-data.html">1. From scorebooks to fifteen million game states</a><p>Every model in this lab starts from one question: at this moment of a game, how often did the home team go on to win? To answer it we need the moment, for every plate appearance of every game we can get. This note is about getting it right.</p></li><li><a href="02-the-table.html">2. Step 1: just count</a><p>The plainest possible model: for each state, the share of games the home team won from it. Home team down a run in the bottom of the 9th, nobody on, nobody out? Find every time it happened and count. No formula, no assumptions. This is the lookup table, and it is the model every other step has to beat.</p></li><li><a href="03-shrinkage.html">3. Step 2: borrow strength (empirical Bayes)</a><p>A state seen four times tells us something, just not much. The fix is not to throw its record away but to mix it with something steadier: a related state with far more games behind it. This is shrinkage, and choosing how much to shrink from the data itself is called empirical Bayes.</p></li><li><a href="04-logistic.html">4. Step 3: a formula (logistic regression)</a><p>The table and the shrunk table store one number per state, about nine thousand in all. This step throws the table away and asks: can a handful of numbers, built from what a fan knows about baseball, do the same job?</p></li><li><a href="05-boosting.html">5. Step 4: trees (gradient boosting)</a><p>The table knows every quirk but no logic; the formula knows the logic but smooths over the quirks. Gradient boosting tries to have both: it starts from nothing, and adds small decision trees one at a time, each one fixing what the trees before it got wrong.</p></li><li><a href="06-eras.html">6. Eras: what changes, and what doesn&#x27;t</a><p>Baseball in 1910 and baseball in 2010 are not quite the same game. Scoring has swung from 3.40 runs per team per game (1908) to 5.58 (1930), the ball, the parks and the strategy have changed, and since 2020 even the rules of extra innings. Does a two-run lead in the 7th mean something different in each era?</p></li></ol>
+<p class="lab-intro">How each experiment was built, one step at a time, in plain words: the data, the models from the plainest to the strongest, the honest tests that compare them, and what they found.</p>
+<p class="lab-label">What are the odds?</p>
+<ol class="lab-notes-list" start="1"><li><a href="01-the-data.html">1. From scorebooks to fifteen million game states</a><p>Every model in this lab starts from one question: at this moment of a game, how often did the home team go on to win? To answer it we need the moment, for every plate appearance of every game we can get. This note is about getting it right.</p></li><li><a href="02-the-table.html">2. Step 1: just count</a><p>The plainest possible model: for each state, the share of games the home team won from it. Home team down a run in the bottom of the 9th, nobody on, nobody out? Find every time it happened and count. No formula, no assumptions. This is the lookup table, and it is the model every other step has to beat.</p></li><li><a href="03-shrinkage.html">3. Step 2: borrow strength (empirical Bayes)</a><p>A state seen four times tells us something, just not much. The fix is not to throw its record away but to mix it with something steadier: a related state with far more games behind it. This is shrinkage, and choosing how much to shrink from the data itself is called empirical Bayes.</p></li><li><a href="04-logistic.html">4. Step 3: a formula (logistic regression)</a><p>The table and the shrunk table store one number per state, about nine thousand in all. This step throws the table away and asks: can a handful of numbers, built from what a fan knows about baseball, do the same job?</p></li><li><a href="05-boosting.html">5. Step 4: trees (gradient boosting)</a><p>The table knows every quirk but no logic; the formula knows the logic but smooths over the quirks. Gradient boosting tries to have both: it starts from nothing, and adds small decision trees one at a time, each one fixing what the trees before it got wrong.</p></li><li><a href="06-eras.html">6. Eras: what changes, and what doesn&#x27;t</a><p>Baseball in 1910 and baseball in 2010 are not quite the same game. Scoring has swung from 3.40 runs per team per game (1908) to 5.58 (1930), the ball, the parks and the strategy have changed, and since 2020 even the rules of extra innings. Does a two-run lead in the 7th mean something different in each era?</p></li></ol>
+<p class="lab-label">Rookie Report</p>
+<ol class="lab-notes-list" start="7"><li><a href="07-rookies.html">7. Rookies: will he be a star?</a><p>Collectors, fans and front offices all ask the same thing about a rookie: is this the start of something? This experiment asks it of every rookie since 1932, tests the answer on rookies the model never saw, and turns it into the Rookie Report. The honest result: a model does find more future stars than the back of the card or the Rookie of the Year voters, and almost all of its edge comes from one number they ignore.</p></li></ol>
 <p class="lab-credit">The same notes are in the repository, with the code that makes every number: <a href="https://github.com/Jankozeluh/whiff-lab/tree/main/lab-notes">lab-notes/ on GitHub</a>.</p>
 </main>
 <footer class="lab-footer"><div class="wrap">
@@ -33,7 +36,8 @@
 <div><img src="../assets/whiff-logo-chalk.png" alt="Whiff Lab" width="60" height="26">
 <p class="lab-footer__tagline">Open baseball models from free play-by-play, with the data, the steps and the tests in the open.</p></div>
 <div><p class="lab-footer__label">Lab</p><ul class="lab-footer__links">
-<li><a href="../odds/">What are the odds?</a></li><li><a href="../notes/">Lab notes</a></li>
+<li><a href="../odds/">What are the odds?</a></li><li><a href="../rookies/">Rookie Report</a></li>
+<li><a href="../notes/">Lab notes</a></li>
 <li><a href="https://github.com/Jankozeluh/whiff-lab">Code and data on GitHub</a></li></ul></div>
 <div><p class="lab-footer__label">Read</p><ul class="lab-footer__links">
 <li><a href="https://thedailywhiff.com/">The Daily Whiff</a></li>
@@ -41,7 +45,8 @@
 </div>
 <div class="lab-legal">
 <p>Whiff Lab, an independent fan project, not affiliated with Major League Baseball or its clubs · Data: Retrosheet's
-official releases (through the Chadwick Baseball Bureau's mirror) · The information used here was obtained free of charge from and is copyrighted by Retrosheet.  Interested parties may contact Retrosheet at &quot;www.retrosheet.org&quot;. · Typeface:
+official releases (through the Chadwick Baseball Bureau's mirror) · The information used here was obtained free of charge from and is copyrighted by Retrosheet.  Interested parties may contact Retrosheet at &quot;www.retrosheet.org&quot;. · Rookie Report:
+the Lahman Baseball Database, © Sean Lahman, CC BY-SA 3.0 · Typeface:
 Archivo, SIL Open Font License · Code: <a href="https://github.com/Jankozeluh/whiff-lab/blob/main/LICENSE">MIT licence</a>.</p>
 </div>
 </div></footer>

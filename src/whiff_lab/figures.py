@@ -282,6 +282,59 @@ def comebacks(out: Path) -> Path:
     return save(fig, out / "comebacks.svg")
 
 
+def rookie_ages(out: Path) -> Path:
+    rep = json.loads((RESULTS / "rookies_report.json").read_text())
+    fig, axes = plt.subplots(1, 2, figsize=(7.2, 2.8), sharey=True)
+    for ax, (kind, label) in zip(axes, (("hitter", "Hitters"), ("pitcher", "Pitchers")), strict=True):
+        curve = rep["age_curve"][kind]
+        ages = [str(c["age"]) if c["age"] < 29 else "29+" for c in curve]
+        rates = [c["rate"] for c in curve]
+        ax.bar(ages, rates, color=[LEATHER if a in ("20", "21") else GRAPHITE for a in ages], width=0.7)
+        for i, v in enumerate(rates):
+            ax.text(i, v, f"{v:.0%}", ha="center", va="bottom", fontsize=7.5, color=INK)
+        ax.set_title(label)
+        ax.set_xlabel("Age in his rookie season")
+        ax.yaxis.set_major_formatter(matplotlib.ticker.PercentFormatter(1, decimals=0))
+        ax.grid(axis="x", visible=False)
+    axes[0].set_ylabel("Became a star")
+    return save(fig, out / "rookie_ages.svg")
+
+
+def rookie_test(out: Path) -> Path:
+    t = json.loads((RESULTS / "rookies_test.json").read_text())
+    rows = [
+        (
+            "The main number on the card",
+            lambda k: next(
+                v for n, v in t[k]["methods"].items() if n.startswith("Back of the card: ") and "all" not in n
+            ),
+        ),
+        ("Everything on the card", lambda k: t[k]["methods"]["Back of the card: all of it"]),
+        ("Rookie of the Year voters", lambda k: t[k]["methods"]["Rookie of the Year voters"]),
+        ("Age alone", lambda k: t[k]["parts"]["Age only"]),
+        ("The model", lambda k: t[k]["methods"]["Model (logistic)"]),
+    ]
+    fig, axes = plt.subplots(1, 2, figsize=(7.4, 2.6), sharey=True)
+    for ax, (kind, label) in zip(axes, (("hitter", "Hitters"), ("pitcher", "Pitchers")), strict=True):
+        vals = [f(kind)["top5"]["stars_picked"] for _, f in rows]
+        y = np.arange(len(rows))
+        ax.barh(y, vals, color=[RULE, RULE, RULE, MUTED, LEATHER], height=0.65)
+        for i, v in enumerate(vals):
+            ax.text(v, i, f" {v}", va="center", fontsize=8.5, color=INK)
+        ax.set_yticks(y, [n for n, _ in rows])
+        ax.invert_yaxis()
+        ax.set_title(f"{label}: stars among each year's top 5")
+        ax.set_xlim(0, max(vals) * 1.25)
+        ax.grid(axis="y", visible=False)
+    fig.supxlabel(
+        f"Rookies of {t['test']}, {t['hitter']['methods']['Model (logistic)']['top5']['picked']} picks each",
+        fontsize=9,
+        color=MUTED,
+        y=-0.04,
+    )
+    return save(fig, out / "rookie_test.svg")
+
+
 def draw_all(out: Path) -> list[Path]:
     out.mkdir(parents=True, exist_ok=True)
     c = counts()
@@ -294,4 +347,6 @@ def draw_all(out: Path) -> list[Path]:
         rule(out),
         eras(out),
         comebacks(out),
+        rookie_ages(out),
+        rookie_test(out),
     ]

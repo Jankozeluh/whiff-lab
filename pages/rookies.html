@@ -1,0 +1,74 @@
+<p class="lab-kicker">Experiment 2 · Rookies</p>
+<h1 class="lab-title">Rookie Report: will he be a star?</h1>
+<p class="lab-intro">Every rookie of {{rr.classes.1}} and {{rr.classes.0}}, with his chance of making at least two All-Star teams in his next nine seasons, the five rookies since 1932 most like him and what became of them, and how much of his first season was luck. Tested on the rookies of {{rk.test}}: the model found more future stars than the back of the card or the Rookie of the Year voters.</p>
+
+<section class="rk-lead" aria-labelledby="rk-lead-h">
+<p class="lab-kicker">The finding</p>
+<h2 class="rk-lead__title" id="rk-lead-h">The most important number on a rookie card is the birth date</h2>
+<p class="rk-lead__text">Of all hitters who were rookies at 20, {{rr.age_curve.hitter.0.rate|pct0}} went on to make at least two All-Star teams in the next nine seasons. At 24 it was {{rr.age_curve.hitter.4.rate|pct0}}, at 27 {{rr.age_curve.hitter.7.rate|pct0}}. Age alone picks future stars better than everything else on the back of the card, and better than the Rookie of the Year voters.</p>
+<div class="rk-ages" id="rk-ages" aria-label="Share of rookies who became stars, by age"><p class="odds-msg">Loading…</p></div>
+<p class="rk-lead__note">Every rookie from {{rr.fitted_on}}, by age in his rookie season. A star: two or more All-Star teams in the nine seasons after it.</p>
+</section>
+
+<section class="lab-sec" id="report" aria-labelledby="report-h">
+<h2 id="report-h">The rookies of {{rr.classes.0}} and {{rr.classes.1}}</h2>
+<p class="lab-lede">Sorted by the chance to become a star. Tap a rookie for the five most similar rookies since 1932 and what became of them, how much of his season was luck, and what the voters said.</p>
+<div class="rk-controls">
+<div class="odds-btns odds-btns--2 rk-seg" role="group" aria-label="Rookie class" id="rk-class"></div>
+<div class="odds-btns odds-btns--2 rk-seg" role="group" aria-label="Hitters or pitchers">
+<button class="odds-btn" type="button" data-kind="hitter" aria-pressed="true">Hitters</button><button class="odds-btn" type="button" data-kind="pitcher" aria-pressed="false">Pitchers</button>
+</div>
+<label class="rk-search"><span class="screen-reader-text">Find a rookie</span><input type="search" id="rk-find" placeholder="Find a rookie or a team" autocomplete="off"></label>
+</div>
+<ol class="rk-list" id="rk-list"><li class="odds-msg">Loading the rookies…</li></ol>
+<p class="lab-note" id="rk-count"></p>
+</section>
+
+<section class="lab-sec" id="test">
+<h2>Does it work? The test</h2>
+<p>The model learned from the rookies of {{rk.train}} and was then scored on the rookies of {{rk.test}}, whose next nine seasons are all in the data: {{rk.hitter.rookies_test|int}} hitters ({{rk.hitter.stars_test|int}} became stars) and {{rk.pitcher.rookies_test|int}} pitchers ({{rk.pitcher.stars_test|int}}). Each test year, the five rookies ranked highest by each method ({{rk.hitter.methods.Model (logistic).top5.picked|int}} picks in all): how many became stars?</p>
+<div class="lab-table"><table>
+<thead><tr><th>Ranked by</th><th class="num">Hitters: stars in each year's top 5</th><th class="num">Pitchers</th></tr></thead>
+<tbody>
+<tr><th>The main number on the card (OPS+ / ERA−)</th><td class="num">{{rk.hitter.methods.Back of the card: OPS+.top5.stars_picked|int}} of {{rk.hitter.methods.Back of the card: OPS+.top5.picked|int}}</td><td class="num">{{rk.pitcher.methods.Back of the card: ERA-.top5.stars_picked|int}} of {{rk.pitcher.methods.Back of the card: ERA-.top5.picked|int}}</td></tr>
+<tr><th>Everything on the back of the card</th><td class="num">{{rk.hitter.methods.Back of the card: all of it.top5.stars_picked|int}}</td><td class="num">{{rk.pitcher.methods.Back of the card: all of it.top5.stars_picked|int}}</td></tr>
+<tr><th>The Rookie of the Year voters</th><td class="num">{{rk.hitter.methods.Rookie of the Year voters.top5.stars_picked|int}}</td><td class="num">{{rk.pitcher.methods.Rookie of the Year voters.top5.stars_picked|int}}</td></tr>
+<tr><th>Age alone</th><td class="num">{{rk.hitter.parts.Age only.top5.stars_picked|int}}</td><td class="num">{{rk.pitcher.parts.Age only.top5.stars_picked|int}}</td></tr>
+<tr class="is-best"><th>The model</th><td class="num">{{rk.hitter.methods.Model (logistic).top5.stars_picked|int}}</td><td class="num">{{rk.pitcher.methods.Model (logistic).top5.stars_picked|int}}</td></tr>
+</tbody></table></div>
+<p class="lab-note">Over all test rookies, not just the top five, the model's forecasts beat the card's and the voters' by a margin that resampling the rookies a thousand times never erased (log loss, lab note 7).</p>
+<p>Its percentages mean what they say: of the test hitters it gave a {{rk.hitter.calibration.4.from|pct0}}–{{rk.hitter.calibration.4.to|pct0}} chance, {{rk.hitter.calibration.4.happened|pct0}} became stars; of those it gave under {{rk.hitter.calibration.0.to|pct0}}, {{rk.hitter.calibration.0.happened|pct1}}.</p>
+<div class="lab-table"><table>
+<thead><tr><th>The model said</th><th class="num">Hitters</th><th class="num">became stars</th><th class="num">Pitchers</th><th class="num">became stars</th></tr></thead>
+<tbody id="rk-calib">
+<tr><td>{{rk.hitter.calibration.0.from|pct0}}–{{rk.hitter.calibration.0.to|pct0}}</td><td class="num">{{rk.hitter.calibration.0.rookies|int}}</td><td class="num">{{rk.hitter.calibration.0.happened|pct0}}</td><td class="num">{{rk.pitcher.calibration.0.rookies|int}}</td><td class="num">{{rk.pitcher.calibration.0.happened|pct0}}</td></tr>
+<tr><td>{{rk.hitter.calibration.1.from|pct0}}–{{rk.hitter.calibration.1.to|pct0}}</td><td class="num">{{rk.hitter.calibration.1.rookies|int}}</td><td class="num">{{rk.hitter.calibration.1.happened|pct0}}</td><td class="num">{{rk.pitcher.calibration.1.rookies|int}}</td><td class="num">{{rk.pitcher.calibration.1.happened|pct0}}</td></tr>
+<tr><td>{{rk.hitter.calibration.2.from|pct0}}–{{rk.hitter.calibration.2.to|pct0}}</td><td class="num">{{rk.hitter.calibration.2.rookies|int}}</td><td class="num">{{rk.hitter.calibration.2.happened|pct0}}</td><td class="num">{{rk.pitcher.calibration.2.rookies|int}}</td><td class="num">{{rk.pitcher.calibration.2.happened|pct0}}</td></tr>
+<tr><td>{{rk.hitter.calibration.3.from|pct0}}–{{rk.hitter.calibration.3.to|pct0}}</td><td class="num">{{rk.hitter.calibration.3.rookies|int}}</td><td class="num">{{rk.hitter.calibration.3.happened|pct0}}</td><td class="num">{{rk.pitcher.calibration.3.rookies|int}}</td><td class="num">{{rk.pitcher.calibration.3.happened|pct0}}</td></tr>
+</tbody></table></div>
+<p class="lab-note">Test rookies grouped by the chance the model gave them. Above 35% the groups are small (hitters: {{rk.hitter.calibration.4.rookies|int}} and {{rk.hitter.calibration.5.rookies|int}}, pitchers: {{rk.pitcher.calibration.4.rookies|int}} and {{rk.pitcher.calibration.5.rookies|int}}); all groups are in <a href="https://github.com/Jankozeluh/whiff-lab/blob/main/results/rookies_test.json">results/rookies_test.json</a>.</p>
+</section>
+
+<section class="lab-sec" id="not">
+<h2>What didn't help</h2>
+<ul>
+<li><strong>Taking the luck out of his rates.</strong> A rookie's strikeout, walk and home run rates and his average on balls in play are shrunk toward the league's, so 300 plate appearances can't say more than they know. It makes the luck readable for each rookie, but it predicts stars only a hair better than his raw numbers with his age.</li>
+<li><strong>His pitches.</strong> Since 1988 Retrosheet has every pitch: how often a hitter's swings missed, how often a pitcher made them miss, how often each swung or threw a ball. The card never shows these. Added to the model on the rookies of {{rp.test}}, they changed nothing measurable.</li>
+<li><strong>A fancier model.</strong> Gradient boosting did worse than the plain logistic regression: a few thousand rookies are too few for it.</li>
+</ul>
+<p>So the edge is not hidden data. It is reading the data that every card shows the right way: the birth date first, then how much he played, his power and his strikeouts.</p>
+</section>
+
+<section class="lab-sec" id="read">
+<h2>How to read it</h2>
+<ul>
+<li><strong>A star means All-Star teams.</strong> They are picked by fans, players and the league, and every club gets at least one, so the label is popularity as much as value.</li>
+<li><strong>A rookie</strong> is a player in the season he first goes past 130 at-bats or 50 innings, MLB's limits. A late call-up who stays under them is a rookie the next year.</li>
+<li><strong>Players who came from Japan's, Korea's or Taiwan's top leagues</strong> arrive as grown pros, and the model's age penalty is unfair to them. They are marked.</li>
+<li><strong>What the model can't see:</strong> injuries, minor-league records, scouting reports, how hard he hits the ball. Professional projections use those; the lab only uses free, open data.</li>
+<li><strong>New classes</strong> arrive when the Lahman database publishes a season, usually early in the next year; the report then rebuilds by itself.</li>
+</ul>
+<p><a class="lab-more" href="../notes/07-rookies.html">How it was built: lab note 7</a></p>
+</section>
+
+<p class="lab-credit">Data: the Lahman Baseball Database (season statistics, birth dates, positions, All-Star teams, Rookie of the Year votes), © Sean Lahman, CC BY-SA 3.0, read from the R package Lahman ({{rr.lahman}}); the tables here are shared under the same licence. Pitches: Retrosheet. {{notice}} Independent fan project, not affiliated with MLB.</p>

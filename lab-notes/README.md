@@ -1,6 +1,8 @@
 # Lab notes
 
-How *What are the odds?* was built, one step at a time. Each note is built from `notes/` with the numbers of the latest rebuild filled in.
+How each experiment was built, one step at a time. Each note is built from `notes/` with the numbers of the latest rebuild filled in.
+
+## What are the odds?
 
 1. [From scorebooks to fifteen million game states](01-the-data.md): Every model in this lab starts from one question: at this moment of a game, how often did the home team go on to win? To answer it we need the moment, for every plate appearance of every game we can get. This note is about getting it right.
 2. [Step 1: just count](02-the-table.md): The plainest possible model: for each state, the share of games the home team won from it. Home team down a run in the bottom of the 9th, nobody on, nobody out? Find every time it happened and count. No formula, no assumptions. This is the lookup table, and it is the model every other step has to beat.
@@ -8,3 +10,7 @@ How *What are the odds?* was built, one step at a time. Each note is built from 
 4. [Step 3: a formula (logistic regression)](04-logistic.md): The table and the shrunk table store one number per state, about nine thousand in all. This step throws the table away and asks: can a handful of numbers, built from what a fan knows about baseball, do the same job?
 5. [Step 4: trees (gradient boosting)](05-boosting.md): The table knows every quirk but no logic; the formula knows the logic but smooths over the quirks. Gradient boosting tries to have both: it starts from nothing, and adds small decision trees one at a time, each one fixing what the trees before it got wrong.
 6. [Eras: what changes, and what doesn't](06-eras.md): Baseball in 1910 and baseball in 2010 are not quite the same game. Scoring has swung from 3.40 runs per team per game (1908) to 5.58 (1930), the ball, the parks and the strategy have changed, and since 2020 even the rules of extra innings. Does a two-run lead in the 7th mean something different in each era?
+
+## Rookie Report
+
+7. [Rookies: will he be a star?](07-rookies.md): Collectors, fans and front offices all ask the same thing about a rookie: is this the start of something? This experiment asks it of every rookie since 1932, tests the answer on rookies the model never saw, and turns it into the Rookie Report. The honest result: a model does find more future stars than the back of the card or the Rookie of the Year voters, and almost all of its edge comes from one number they ignore.

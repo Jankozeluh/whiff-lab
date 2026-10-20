@@ -1,0 +1,51 @@
+/* Rookie Report: the finding on a graphite band under the seam, then one row per rookie on paper that opens to
+   his comparables. Phone first: a rookie's name and chance on one line, his numbers under them. */
+.rk-lead { position: relative; margin: 1.5rem 0 1rem; padding: 2rem 1.25rem 1.1rem; background: var(--graphite); color: var(--chalk); border-bottom: 5px solid var(--leather); }
+.rk-lead::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 14px; background: var(--leather); -webkit-mask: var(--seam) repeat-x center; mask: var(--seam) repeat-x center; }
+.rk-lead .lab-kicker { color: var(--leather); }
+.rk-lead__title { margin: .35rem 0 .6rem; color: var(--chalk); font-stretch: 74%; font-weight: 800; font-size: clamp(1.8rem, 5vw, 3rem); line-height: 1; }
+.rk-lead__text { max-width: 62ch; margin: 0 0 1rem; color: var(--chalk-dim); }
+.rk-lead__note { margin: .6rem 0 0; color: var(--chalk-dim); font-size: .78rem; }
+.rk-ages { display: grid; gap: 1rem 2.5rem; }
+@media (min-width: 700px) { .rk-ages { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.rk-ages__h { margin: 0 0 .4rem; font: var(--label); letter-spacing: .08em; text-transform: uppercase; color: var(--chalk-dim); }
+.rk-ages__bars { list-style: none; margin: 0; padding: 0; display: grid; gap: .3rem; }
+.rk-ages__bars li { display: grid; grid-template-columns: 2.2rem minmax(0, 1fr) 6.5rem; align-items: center; gap: .6rem; font-size: .88rem; font-variant-numeric: tabular-nums; }
+.rk-ages__age { font-weight: 700; text-align: right; }
+.rk-ages__track { height: 12px; background: #34373d; }
+.rk-ages__bar { display: block; height: 100%; background: var(--leather); }
+.rk-ages__v { font-weight: 700; }
+.rk-ages__v small { font-weight: 400; color: var(--chalk-dim); }
+
+.rk-controls { display: grid; gap: .6rem; margin: 1rem 0; }
+@media (min-width: 782px) { .rk-controls { grid-template-columns: 16rem 16rem minmax(0, 1fr); align-items: center; } }
+.rk-seg .odds-btn { font-size: .92rem; }
+.rk-search input { width: 100%; min-height: 44px; padding: .45rem .7rem; border: 2px solid var(--graphite); border-radius: 0; background: #fff; color: var(--ink); font: inherit; font-size: .95rem; }
+.rk-controls button { font: inherit; cursor: pointer; }
+
+.rk-list { list-style: none; margin: 0; padding: 0; display: grid; gap: .5rem; }
+.lab-sec .rk-list > li, .rk-ages__bars li { max-width: none; }
+.rk-item details { background: var(--paper); border: 1px solid var(--rule); border-left: 4px solid var(--rule); }
+.rk-item details[open] { border-left-color: var(--leather); }
+.rk-sum { display: grid; grid-template-columns: 2rem minmax(0, 1fr) 5.5rem; grid-template-areas: "rank who chance" "rank line chance"; gap: .15rem .75rem; align-items: center; min-height: 44px; padding: .6rem .8rem; cursor: pointer; list-style: none; }
+.rk-sum::-webkit-details-marker { display: none; }
+@media (min-width: 782px) { .rk-sum { grid-template-columns: 2.5rem minmax(0, 1.2fr) minmax(0, 1.4fr) 9rem; grid-template-areas: "rank who line chance"; } }
+.rk-rank { grid-area: rank; color: var(--muted); font-weight: 700; font-variant-numeric: tabular-nums; text-align: right; }
+.rk-who { grid-area: who; min-width: 0; }
+.rk-who strong { display: block; font-stretch: 86%; font-size: 1.12rem; line-height: 1.15; overflow-wrap: anywhere; }
+.rk-who small, .rk-line small { display: block; color: var(--muted); font-size: .8rem; }
+.rk-line { grid-area: line; font-size: .92rem; font-variant-numeric: tabular-nums; }
+.rk-chance { grid-area: chance; display: grid; gap: .25rem; justify-items: end; }
+.rk-chance b { font-stretch: 80%; font-weight: 800; font-size: 1.5rem; line-height: 1; font-variant-numeric: tabular-nums; }
+.rk-chance i { display: block; width: 100%; height: 6px; background: linear-gradient(90deg, var(--leather) var(--p), var(--rule) var(--p)); }
+.rk-sum:hover .rk-who strong { text-decoration: underline; text-decoration-color: var(--leather); text-underline-offset: 3px; }
+.rk-more { padding: 0 .9rem 1rem 3.6rem; font-size: .92rem; }
+@media (max-width: 600px) { .rk-more { padding-left: .9rem; } }
+.rk-more p { margin: .5rem 0; max-width: 70ch; }
+.rk-more h3 { margin: 1rem 0 .4rem; font: var(--label); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.rk-flag { padding-left: .7rem; border-left: 3px solid var(--leather); }
+.rk-comps { margin: 0; padding-left: 1.2rem; display: grid; gap: .45rem; }
+.rk-comps li { max-width: 72ch; }
+.rk-comps li b { display: block; font-weight: 600; color: var(--muted); }
+.rk-comps li.is-star b { color: var(--leather-text); }
+.rk-comps a { position: relative; }

@@ -110,6 +110,9 @@ def context() -> dict:
         "seasons": seasons,
         "eras": {era["key"]: era for era in f["eras"]},
         "notice": RETROSHEET_NOTICE,
+        "rk": load("rookies_test"),
+        "rp": load("rookies_pitches_test"),
+        "rr": load("rookies_report"),
     }
 
 
@@ -153,6 +156,7 @@ def fill(text: str, ctx: dict) -> str:
 
 NAV = (
     ("odds/", "What are the odds?"),
+    ("rookies/", "Rookie Report"),
     ("notes/", "Lab notes"),
     ("https://thedailywhiff.com/", "The Daily Whiff"),
 )
@@ -214,7 +218,8 @@ def layout(
 <div><img src="{root}assets/whiff-logo-chalk.png" alt="Whiff Lab" width="60" height="26">
 <p class="lab-footer__tagline">Open baseball models from free play-by-play, with the data, the steps and the tests in the open.</p></div>
 <div><p class="lab-footer__label">Lab</p><ul class="lab-footer__links">
-<li><a href="{root}odds/">What are the odds?</a></li><li><a href="{root}notes/">Lab notes</a></li>
+<li><a href="{root}odds/">What are the odds?</a></li><li><a href="{root}rookies/">Rookie Report</a></li>
+<li><a href="{root}notes/">Lab notes</a></li>
 <li><a href="{REPO}">Code and data on GitHub</a></li></ul></div>
 <div><p class="lab-footer__label">Read</p><ul class="lab-footer__links">
 <li><a href="https://thedailywhiff.com/">The Daily Whiff</a></li>
@@ -222,7 +227,8 @@ def layout(
 </div>
 <div class="lab-legal">
 <p>Whiff Lab, an independent fan project, not affiliated with Major League Baseball or its clubs · Data: Retrosheet's
-official releases (through the Chadwick Baseball Bureau's mirror) · {html.escape(RETROSHEET_NOTICE)} · Typeface:
+official releases (through the Chadwick Baseball Bureau's mirror) · {html.escape(RETROSHEET_NOTICE)} · Rookie Report:
+the Lahman Baseball Database, © Sean Lahman, CC BY-SA 3.0 · Typeface:
 Archivo, SIL Open Font License · Code: <a href="{REPO}/blob/main/LICENSE">MIT licence</a>.</p>
 </div>
 </div></footer>
@@ -240,6 +246,7 @@ PAGE_META = {
         "an honest test in the open. First: win probability for any game state since 1908.",
         "",
         (),
+        (),
     ),
     "odds.html": (
         "odds/index.html",
@@ -248,8 +255,25 @@ PAGE_META = {
         "learned from 15 million plate appearances, with the real games behind each number.",
         "odds/",
         ("odds.css",),
+        ("odds.js",),
+    ),
+    "rookies.html": (
+        "rookies/index.html",
+        "Rookie Report: Which MLB Rookies Will Become Stars?",
+        "Every rookie of the last two seasons, with his chance of becoming a multiple All-Star, the most "
+        "similar rookies since 1932 and what became of them, and how much of his first season was luck.",
+        "rookies/",
+        ("odds.css", "rookies.css"),
+        ("rookies.js",),
     ),
 }
+
+
+EXPERIMENTS = (("01", "What are the odds?"), ("07", "Rookie Report"))  # the first note of each experiment
+
+
+def experiment_of(slug: str) -> str:
+    return [name for first, name in EXPERIMENTS if slug[:2] >= first][-1]
 
 
 def note_sources() -> list[Path]:
@@ -267,12 +291,11 @@ def lede_of(md: str) -> str:
 
 def build_pages(ctx: dict) -> list[Path]:
     out = []
-    for src, (dest, title, desc, current, css) in PAGE_META.items():
+    for src, (dest, title, desc, current, css, js) in PAGE_META.items():
         body = fill((PAGES / src).read_text(), ctx)
         depth = dest.count("/")
         path = SITE / dest
         path.parent.mkdir(parents=True, exist_ok=True)
-        js = ("odds.js",) if src in ("odds.html",) else ()
         path.write_text(
             layout(body, title=title, description=desc, root="../" * depth, current=current, css=css, js=js)
         )
@@ -321,7 +344,7 @@ def build_notes(ctx: dict | None = None) -> list[Path]:
         )
         nav += "</nav>"
         page = (
-            f'<p class="lab-kicker">Lab note {i + 1} of {len(sources)} · What are the odds?</p>\n'
+            f'<p class="lab-kicker">Lab note {i + 1} of {len(sources)} · {experiment_of(slug)}</p>\n'
             f'<h1 class="lab-title">{html.escape(title)}</h1>\n<div class="lab-prose">\n{body}\n</div>\n{nav}'
         )
         path = SITE / "notes" / f"{slug}.html"
@@ -336,15 +359,20 @@ def build_notes(ctx: dict | None = None) -> list[Path]:
         )
         out.append(path)
         items.append((slug, title, lede_of(md)))
-    listing = "".join(
-        f'<li><a href="{s}.html">{i + 1}. {html.escape(t)}</a><p>{html.escape(d)}</p></li>'
-        for i, (s, t, d) in enumerate(items)
-    )
+    listing = ""
+    for _, name in EXPERIMENTS:
+        mine = [(i, it) for i, it in enumerate(items) if experiment_of(it[0]) == name]
+        listing += f'<p class="lab-label">{html.escape(name)}</p>\n<ol class="lab-notes-list" start="{mine[0][0] + 1}">'
+        listing += "".join(
+            f'<li><a href="{s}.html">{i + 1}. {html.escape(t)}</a><p>{html.escape(d)}</p></li>'
+            for i, (s, t, d) in mine
+        )
+        listing += "</ol>\n"
     index = (
-        '<h1 class="lab-title">Lab notes</h1>\n<p class="lab-intro">How "What are the odds?" was built, one '
-        "step at a time, in plain words: the data, four models from the plainest to the strongest, the honest "
-        "test that compares them, and what the eras change.</p>\n"
-        f'<ol class="lab-notes-list">{listing}</ol>\n'
+        '<h1 class="lab-title">Lab notes</h1>\n<p class="lab-intro">How each experiment was built, one step '
+        "at a time, in plain words: the data, the models from the plainest to the strongest, the honest tests "
+        "that compare them, and what they found.</p>\n"
+        f"{listing}"
         f'<p class="lab-credit">The same notes are in the repository, with the code that makes every number: '
         f'<a href="{REPO}/tree/main/lab-notes">lab-notes/ on GitHub</a>.</p>'
     )
@@ -353,7 +381,7 @@ def build_notes(ctx: dict | None = None) -> list[Path]:
         layout(
             index,
             title="Lab notes · Whiff Lab",
-            description="How the win probability models were built and tested, step by step.",
+            description="How the lab's models were built and tested, step by step.",
             root="../",
             current="notes/",
         )
@@ -362,10 +390,13 @@ def build_notes(ctx: dict | None = None) -> list[Path]:
     readme = [
         "# Lab notes",
         "",
-        "How *What are the odds?* was built, one step at a time. Each note is built from "
+        "How each experiment was built, one step at a time. Each note is built from "
         "`notes/` with the numbers of the latest rebuild filled in.",
-        "",
     ]
-    readme += [f"{i + 1}. [{t}]({s}.md): {d}" for i, (s, t, d) in enumerate(items)]
+    for _, name in EXPERIMENTS:
+        readme += ["", f"## {name}", ""]
+        readme += [
+            f"{i + 1}. [{t}]({s}.md): {d}" for i, (s, t, d) in enumerate(items) if experiment_of(s) == name
+        ]
     (NOTES_OUT / "README.md").write_text("\n".join(readme) + "\n")
     return out

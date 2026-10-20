@@ -4,7 +4,7 @@
 <h1 class="lab-display">Baseball's numbers, worked out in the open</h1>
 </div>
 <ul class="lab-facts">
-<li><strong>Data</strong> Retrosheet play-by-play, {{s.first_season}}–{{s.last_season}}, free and open</li>
+<li><strong>Data</strong> Retrosheet play-by-play since {{s.first_season}} and the Lahman database, free and open</li>
 <li><strong>Method</strong> every model tested on seasons it never saw</li>
 <li><strong>Open</strong> the code, the tables and the notes on GitHub</li>
 </ul>
@@ -23,6 +23,18 @@
 <li>A table of nine thousand game states is hard to beat. Smoothing helps where it is thin, and a formula wins when the rules change.</li>
 </ul>
 <p><a class="lab-more" href="odds/">Open the experiment</a></p>
+</article>
+
+<article class="lab-card">
+<p class="lab-kicker">Experiment 2 · Rookies</p>
+<h2 class="lab-card__title"><a href="rookies/">Rookie Report: will he be a star?</a></h2>
+<p class="lab-card__text">Every rookie of {{rr.classes.1}} and {{rr.classes.0}} with his chance of making at least two All-Star teams in his next nine seasons, the five most similar rookies since 1932 and what became of them, and how much of his first season was luck.</p>
+<ul class="lab-card__finds">
+<li>The most important number on a rookie card is the birth date: {{rr.age_curve.hitter.0.rate|pct0}} of hitters who were rookies at 20 became stars, {{rr.age_curve.hitter.4.rate|pct0}} at 24.</li>
+<li>Tested on the rookies of {{rk.test}}: among each year's top five, the model found {{rk.hitter.methods.Model (logistic).top5.stars_picked|int}} future star hitters, the back of the card {{rk.hitter.methods.Back of the card: all of it.top5.stars_picked|int}}, the Rookie of the Year voters {{rk.hitter.methods.Rookie of the Year voters.top5.stars_picked|int}}.</li>
+<li>Most of a rookie's batting average beyond his strikeouts and home runs is luck.</li>
+</ul>
+<p><a class="lab-more" href="rookies/">Open the report</a></p>
 </article>
 
 <p class="lab-label">How the lab works</p>

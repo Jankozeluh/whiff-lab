@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="en" data-data="../data/">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rookies: will he be a star? · Whiff Lab notes</title>
+<meta name="description" content="Collectors, fans and front offices all ask the same thing about a rookie: is this the start of something? This experiment asks it of every rookie since 1932, tests the answer on rookies the model never saw, and turns it into the Rookie Report. The honest result: a model does find more future stars than the back of the card or the Rookie of the Year voters, and almost all of its edge comes from one number they ignore.">
+<link rel="icon" href="../assets/whiff-site-icon.png">
+<link rel="preload" href="../assets/fonts/archivo-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../assets/lab.css?v=2cb74a474c">
+<script>document.documentElement.classList.add("is-js")</script>
+</head>
+<body>
+<header class="lab-header"><div class="wrap lab-header__row">
+<a class="lab-brand" href="../"><img src="../assets/whiff-logo-chalk.png" alt="" width="70" height="30"><span>Whiff Lab</span></a>
+<nav class="lab-nav" aria-label="Main">
+<button class="lab-nav__open" type="button" aria-expanded="false" aria-controls="lab-menu" aria-label="Open menu"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7.5h16M4 12h16M4 16.5h16" stroke="currentColor" stroke-width="1.8" fill="none"/></svg></button>
+<div class="lab-nav__panel" id="lab-menu">
+<button class="lab-nav__close" type="button" aria-label="Close menu"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" fill="none"/></svg></button>
+<ul><li><a href="../odds/">What are the odds?</a></li><li><a href="../rookies/">Rookie Report</a></li><li><a href="../notes/" aria-current="page">Lab notes</a></li><li><a href="https://thedailywhiff.com/">The Daily Whiff</a></li></ul>
+</div>
+</nav>
+</div></header>
+<div class="lab-seam"></div>
+<main class="wrap">
+<p class="lab-kicker">Lab note 7 of 7 · Rookie Report</p>
+<h1 class="lab-title">Rookies: will he be a star?</h1>
+<div class="lab-prose">
+<p>Collectors, fans and front offices all ask the same thing about a rookie: is this the start of something? This experiment asks it of every rookie since 1932, tests the answer on rookies the model never saw, and turns it into the <a href="../rookies/">Rookie Report</a>. The honest result: a model does find more future stars than the back of the card or the Rookie of the Year voters, and almost all of its edge comes from one number they ignore.</p>
+<h2>The question</h2>
+<ul>
+<li><strong>A rookie</strong> is a player in the season he first goes past 130 at-bats (a hitter) or 50 innings (a pitcher), the limits MLB uses for rookie status.</li>
+<li><strong>A star</strong> is a rookie who makes at least two All-Star teams in the nine seasons after his rookie year. All-Star teams are what card prices and fame follow; they are also a popularity contest (fans vote, every club gets one), which the label inherits.</li>
+<li><strong>The data</strong> is the <a href="https://sabr.org/lahman-database/">Lahman Baseball Database</a>: every season's statistics, birth dates, positions, All-Star teams and Rookie of the Year votes, © Sean Lahman, CC BY-SA 3.0, read from the R package Lahman (Lahman_14.0-0.tar.gz). Tables derived from it are shared under the same licence.</li>
+</ul>
+<h2>The test comes first</h2>
+<p>Before anything was built, the question was put to a test by time, like experiment 1: everything was fitted on the rookies of 1932-1994 and scored on the rookies of 1995-2016, whose nine following seasons are all in the data: 1,472 hitters (175 became stars) and 1,723 pitchers (108).</p>
+<p>Five ways to rank a rookie class were compared: the main number on the card (OPS+ for hitters, ERA− for pitchers, both relative to the league), everything on the back of the card (average, home runs, runs batted in, steals, OPS+; wins, ERA−, strikeouts, saves), the share of Rookie of the Year points, age alone, and the model below. Each was turned into a probability by a logistic regression fitted on the training rookies.</p>
+<p><img loading="lazy" alt="Stars among each year's five highest-ranked rookies" src="figures/rookie_test.svg" /></p>
+<table>
+<thead>
+<tr>
+<th>Ranked by</th>
+<th>Hitters: log loss</th>
+<th>AUC</th>
+<th>Pitchers: log loss</th>
+<th>AUC</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Nothing (every rookie gets the base rate)</td>
+<td>0.368</td>
+<td>0.500</td>
+<td>0.238</td>
+<td>0.500</td>
+</tr>
+<tr>
+<td>Everything on the back of the card</td>
+<td>0.330</td>
+<td>0.730</td>
+<td>0.218</td>
+<td>0.743</td>
+</tr>
+<tr>
+<td>The Rookie of the Year voters</td>
+<td>0.343</td>
+<td>0.650</td>
+<td>0.231</td>
+<td>0.607</td>
+</tr>
+<tr>
+<td>The model</td>
+<td>0.282</td>
+<td>0.832</td>
+<td>0.193</td>
+<td>0.811</td>
+</tr>
+</tbody>
+</table>
+<p>AUC is the chance that the model ranks a random future star above a random rookie who did not become one (0.5 is a coin flip, 1 is perfect). Resampling the test rookies, the model's log loss minus the card's lies between -0.059 and -0.037 for hitters and between -0.032 and -0.017 for pitchers (95%): below zero every time.</p>
+<h2>The model</h2>
+<p>A logistic regression on what a scout would ask first: how old is he, how much did he play (and how much before), where does he play (a shortstop or catcher who hits is rarer than a first baseman who does), and how good are his skills. For hitters the skills are his strikeout, walk and home run rates and his average on balls in play; for pitchers, strikeout, walk and home run rates. Each is measured against his league and season, so a 1968 rookie and a 2000 rookie are on the same scale.</p>
+<p>The skills are shrunk toward the league's rate by empirical Bayes, the same idea as step 2 of experiment 1: a rate counts as his own only as far as his sample supports it. The fitted strengths say how much a season tells:</p>
+<table>
+<thead>
+<tr>
+<th>Hitters' rate</th>
+<th>Strength k</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Strikeouts per plate appearance</td>
+<td>34</td>
+</tr>
+<tr>
+<td>Walks</td>
+<td>79</td>
+</tr>
+<tr>
+<td>Home runs</td>
+<td>79</td>
+</tr>
+<tr>
+<td>Hits on balls in play</td>
+<td>606</td>
+</tr>
+</tbody>
+</table>
+<p>Strikeouts settle fast: after 34 plate appearances a rookie's strikeout rate is half his own. His average on balls in play needs 606 balls in play to be half his own, more than a full season: most of a rookie's batting average beyond his strikeouts and home runs is luck. That is where the report's "luck" line comes from.</p>
+<h2>What the edge is made of</h2>
+<table>
+<thead>
+<tr>
+<th>What goes in</th>
+<th>Hitters: log loss</th>
+<th>stars in top 5</th>
+<th>Pitchers: log loss</th>
+<th>stars in top 5</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Age alone</td>
+<td>0.315</td>
+<td>45</td>
+<td>0.217</td>
+<td>21</td>
+</tr>
+<tr>
+<td>Age and the back of the card</td>
+<td>0.286</td>
+<td>57</td>
+<td>0.200</td>
+<td>32</td>
+</tr>
+<tr>
+<td>The model without shrinking</td>
+<td>0.286</td>
+<td>60</td>
+<td>0.194</td>
+<td>35</td>
+</tr>
+<tr>
+<td>The model without age</td>
+<td>0.322</td>
+<td>46</td>
+<td>0.203</td>
+<td>34</td>
+</tr>
+<tr>
+<td>The model</td>
+<td>0.282</td>
+<td>59</td>
+<td>0.193</td>
+<td>36</td>
+</tr>
+</tbody>
+</table>
+<p>Age alone beats everything on the back of the card for hitters, and beats the Rookie of the Year voters for both (the voters' log loss minus age's: the interval for hitters is -0.043 to -0.012). Take age out of the model and it loses most of its edge. Put age next to the card's numbers and you have nearly all of the model: for hitters the difference is -0.010 to 0.003, not measurable; for pitchers the model keeps a small, real edge (-0.014 to -0.001), from strikeouts with the luck taken out.</p>
+<p><img loading="lazy" alt="The share of rookies who became stars, by age" src="figures/rookie_ages.svg" /></p>
+<p>Why age? A 20-year-old rookie who holds his own has a decade of growth ahead; a 27-year-old with the same line is at his peak. Voters reward the best season, cards print it, and the birth date sits in small type in the corner.</p>
+<h2>His pitches don't help</h2>
+<p>Since 1988 Retrosheet has every pitch, which the card never shows: how often a hitter's swings miss, how often he swings, how often a pitcher makes hitters miss or throws a ball. Counted for every rookie of 1988-2003 and 2004-2016, shrunk like the other rates, and added to the model (fitted on 1988-2003, scored on 2004-2016):</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Hitters: log loss</th>
+<th>stars in top 5</th>
+<th>Pitchers: log loss</th>
+<th>stars in top 5</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Age and the back of the card</td>
+<td>0.283</td>
+<td>34</td>
+<td>0.193</td>
+<td>21</td>
+</tr>
+<tr>
+<td>The model</td>
+<td>0.285</td>
+<td>38</td>
+<td>0.189</td>
+<td>23</td>
+</tr>
+<tr>
+<td>The model and the pitches</td>
+<td>0.285</td>
+<td>41</td>
+<td>0.190</td>
+<td>24</td>
+</tr>
+</tbody>
+</table>
+<p>The pitches' effect lies between -0.005 and 0.004 for hitters and -0.005 and 0.006 for pitchers: nothing measurable. A rookie's strikeouts already carry what his misses would say. A fancier model (gradient boosting) did worse than the plain logistic regression, with a few thousand rookies to learn from.</p>
+<h2>The report</h2>
+<p>The final models are fitted on every rookie whose nine seasons are in (1932-2016) and applied to the latest classes. For each rookie the report adds:</p>
+<ul>
+<li><strong>The five most similar rookies since 1932.</strong> Similar in the model's own terms: each input is put on a common scale and weighted by how much it moves the odds, so two rookies of the same age, playing time and skills are close even if one hit .300 by luck. What became of them is the plainest way to read a probability.</li>
+<li><strong>Luck.</strong> A hitter's average with his strikeouts and home runs as they were but an ordinary share of hits on balls in play (his own, shrunk); a pitcher's ERA rebuilt from his strikeouts, walks and home runs, shrunk (the FIP formula, on the league's ERA scale).</li>
+<li><strong>Players from Japan's, Korea's or Taiwan's top leagues</strong> are marked: they arrive in MLB as grown pros, and the model's age penalty is unfair to them.</li>
+</ul>
+<p>The percentages are calibrated: of the test hitters the model gave a 20%–35% chance, 24% became stars; 35%–50%, 49%; over 50%, 66%. At the low end it is a little generous: of the hitters it gave under 5% (on average 2.7%), 1.1% became stars.</p>
+<h2>What it can't see</h2>
+<p>Injuries, minor-league records, scouting reports, how hard he hits the ball, how his pitches move: professional projections use all of these, and none of them is free and open. The report is a well-tested reading of what is on every rookie's record, not a scouting report. New rookie classes arrive when the Lahman database publishes a season, usually early in the following year.</p>
+</div>
+<nav class="lab-notes-nav" aria-label="Lab notes"><a href="06-eras.html">← Eras: what changes, and what doesn&#x27;t</a><span></span></nav>
+</main>
+<footer class="lab-footer"><div class="wrap">
+<div class="lab-footer__cols">
+<div><img src="../assets/whiff-logo-chalk.png" alt="Whiff Lab" width="60" height="26">
+<p class="lab-footer__tagline">Open baseball models from free play-by-play, with the data, the steps and the tests in the open.</p></div>
+<div><p class="lab-footer__label">Lab</p><ul class="lab-footer__links">
+<li><a href="../odds/">What are the odds?</a></li><li><a href="../rookies/">Rookie Report</a></li>
+<li><a href="../notes/">Lab notes</a></li>
+<li><a href="https://github.com/Jankozeluh/whiff-lab">Code and data on GitHub</a></li></ul></div>
+<div><p class="lab-footer__label">Read</p><ul class="lab-footer__links">
+<li><a href="https://thedailywhiff.com/">The Daily Whiff</a></li>
+<li><a href="https://thedailywhiff.com/the-whiff/">The Whiff, a daily puzzle</a></li></ul></div>
+</div>
+<div class="lab-legal">
+<p>Whiff Lab, an independent fan project, not affiliated with Major League Baseball or its clubs · Data: Retrosheet's
+official releases (through the Chadwick Baseball Bureau's mirror) · The information used here was obtained free of charge from and is copyrighted by Retrosheet.  Interested parties may contact Retrosheet at &quot;www.retrosheet.org&quot;. · Rookie Report:
+the Lahman Baseball Database, © Sean Lahman, CC BY-SA 3.0 · Typeface:
+Archivo, SIL Open Font License · Code: <a href="https://github.com/Jankozeluh/whiff-lab/blob/main/LICENSE">MIT licence</a>.</p>
+</div>
+</div></footer>
+<script src="../assets/lab.js?v=5cbb02883b" defer></script>
+</body>
+</html>
