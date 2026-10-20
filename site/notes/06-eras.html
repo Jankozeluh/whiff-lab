@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en" data-data="../data/">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Eras: what changes, and what doesn&#x27;t · Whiff Lab notes</title>
+<meta name="description" content="Baseball in 1910 and baseball in 2010 are not quite the same game. Scoring has swung from 3.40 runs per team per game (1908) to 5.58 (1930), the ball, the parks and the strategy have changed, and since 2020 even the rules of extra innings. Does a two-run lead in the 7th mean something different in each era?">
+<link rel="icon" href="../assets/whiff-site-icon.png">
+<link rel="preload" href="../assets/fonts/archivo-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../assets/lab.css?v=2cb74a474c">
+<script>document.documentElement.classList.add("is-js")</script>
+</head>
+<body>
+<header class="lab-header"><div class="wrap lab-header__row">
+<a class="lab-brand" href="../"><img src="../assets/whiff-logo-chalk.png" alt="" width="70" height="30"><span>Whiff Lab</span></a>
+<nav class="lab-nav" aria-label="Main">
+<button class="lab-nav__open" type="button" aria-expanded="false" aria-controls="lab-menu" aria-label="Open menu"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7.5h16M4 12h16M4 16.5h16" stroke="currentColor" stroke-width="1.8" fill="none"/></svg></button>
+<div class="lab-nav__panel" id="lab-menu">
+<button class="lab-nav__close" type="button" aria-label="Close menu"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" fill="none"/></svg></button>
+<ul><li><a href="../odds/">What are the odds?</a></li><li><a href="../notes/" aria-current="page">Lab notes</a></li><li><a href="https://thedailywhiff.com/">The Daily Whiff</a></li></ul>
+</div>
+</nav>
+</div></header>
+<div class="lab-seam"></div>
+<main class="wrap">
+<p class="lab-kicker">Lab note 6 of 6 · What are the odds?</p>
+<h1 class="lab-title">Eras: what changes, and what doesn&#x27;t</h1>
+<div class="lab-prose">
+<p>Baseball in 1910 and baseball in 2010 are not quite the same game. Scoring has swung from 3.40 runs per team per game (1908) to 5.58 (1930), the ball, the parks and the strategy have changed, and since 2020 even the rules of extra innings. Does a two-run lead in the 7th mean something different in each era?</p>
+<h2>The eras</h2>
+<table>
+<thead>
+<tr>
+<th>Era</th>
+<th>Seasons</th>
+<th>What marks it</th>
+<th>Games used</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Dead ball</td>
+<td>1908-1919</td>
+<td>a soft, overused ball; bunts, steals and few home runs</td>
+<td>13,833</td>
+</tr>
+<tr>
+<td>Live ball</td>
+<td>1920-1941</td>
+<td>the spitball banned, a cleaner ball, Ruth: runs and home runs boom</td>
+<td>25,122</td>
+</tr>
+<tr>
+<td>War and integration</td>
+<td>1942-1960</td>
+<td>wartime rosters, then Robinson and the color line broken</td>
+<td>21,408</td>
+</tr>
+<tr>
+<td>Expansion and the pitchers' peak</td>
+<td>1961-1968</td>
+<td>new teams, a bigger strike zone, 1968's 3.4 runs</td>
+<td>12,637</td>
+</tr>
+<tr>
+<td>Lower mound, the DH</td>
+<td>1969-1992</td>
+<td>the mound lowered in 1969, the AL's designated hitter in 1973</td>
+<td>48,181</td>
+</tr>
+<tr>
+<td>High offense</td>
+<td>1993-2005</td>
+<td>expansion, small parks and big hitters: the most runs since the 1930s</td>
+<td>29,758</td>
+</tr>
+<tr>
+<td>Strikeouts and relievers</td>
+<td>2006-2019</td>
+<td>testing, harder throwers, deeper bullpens, more strikeouts</td>
+<td>33,922</td>
+</tr>
+<tr>
+<td>Runner on second</td>
+<td>2020-2025</td>
+<td>extra innings start with a runner on second; the pitch clock from 2023</td>
+<td>12,784</td>
+</tr>
+</tbody>
+</table>
+<p>The borders are the usual ones of baseball history, not something the data chose. They matter less than they look: every era's numbers lean on the others (below).</p>
+<h2>Does knowing the era help? A test</h2>
+<p>Leave one era out, fit the models on all the others, and score them on the era left out. The logistic regression is told the left-out era's scoring level (its run scale); the table and the trees are not. If eras mattered a lot, the model that knows the run environment should win.</p>
+<table>
+<thead>
+<tr>
+<th>Era left out</th>
+<th>Runs per game</th>
+<th>Table</th>
+<th>Logistic (knows the era's scoring)</th>
+<th>Trees</th>
+<th>The era's own table (unfair)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Dead ball</td>
+<td>3.84</td>
+<td>0.4744</td>
+<td>0.4754</td>
+<td>0.4741</td>
+<td>0.4702</td>
+</tr>
+<tr>
+<td>Live ball</td>
+<td>4.84</td>
+<td>0.4767</td>
+<td>0.4775</td>
+<td>0.4772</td>
+<td>0.4739</td>
+</tr>
+<tr>
+<td>War and integration</td>
+<td>4.36</td>
+<td>0.4768</td>
+<td>0.4781</td>
+<td>0.4770</td>
+<td>0.4745</td>
+</tr>
+<tr>
+<td>Expansion and the pitchers' peak</td>
+<td>4.02</td>
+<td>0.4826</td>
+<td>0.4832</td>
+<td>0.4826</td>
+<td>0.4793</td>
+</tr>
+<tr>
+<td>Lower mound, the DH</td>
+<td>4.23</td>
+<td>0.4831</td>
+<td>0.4844</td>
+<td>0.4833</td>
+<td>0.4818</td>
+</tr>
+<tr>
+<td>High offense</td>
+<td>4.83</td>
+<td>0.4758</td>
+<td>0.4768</td>
+<td>0.4762</td>
+<td>0.4737</td>
+</tr>
+<tr>
+<td>Strikeouts and relievers</td>
+<td>4.49</td>
+<td>0.4694</td>
+<td>0.4707</td>
+<td>0.4695</td>
+<td>0.4677</td>
+</tr>
+<tr>
+<td>Runner on second</td>
+<td>4.48</td>
+<td>0.4682</td>
+<td>0.4690</td>
+<td>0.4683</td>
+<td>0.4640</td>
+</tr>
+</tbody>
+</table>
+<p>The surprise: knowing the era's scoring level did not help. In every era, the table built from the <em>other</em> eras is as good as the formula that was told how many runs the era scored, or better. The last column is unfair on purpose (the era's own table, scored on its own games, has memorised them); it marks how much room there is at most, and it is small, a few thousandths.</p>
+<p>So the plain answer is: <strong>the odds of a given spot are nearly the same in every era.</strong> A lead is worth about what it was worth a century ago.</p>
+<h2>Where the eras do differ</h2>
+<p>"Nearly" hides a few real differences. To see them, each era's own record is combined with the final model (fitted on all eras) by empirical Bayes, as in step 2: an era moves away from the model only as far as its own games show it should. The fitted strength <code>k</code> is between 421 and 1761 games, depending on the era: a spot needs several hundred games in an era before its own record outweighs the model.</p>
+<p><img loading="lazy" alt="Three spots across the eras" src="figures/eras.svg" /></p>
+<p>The clearest case is the late comeback. A home team down a run in the bottom of the 9th, nobody on, nobody out, won 15.4% of the time in the dead-ball era and 20.3% in the live-ball era that came right after; the 90% intervals don't overlap. Fewer runs, fewer comebacks.</p>
+<h2>Comebacks follow the runs</h2>
+<p>That points to a wider pattern. For every game, the lab finds the lowest chance the winner had at any point. 8.1% of all games were won by a team that was below 10% at some point. By season, that share moves with scoring:</p>
+<p><img loading="lazy" alt="Comebacks and runs per game, one dot per season" src="figures/comebacks.svg" /></p>
+<p>Correlation 0.76 over 118 seasons. The top season was 1930 (10.8% of games won from below 10%), the lowest 1908 (5.0%) and, after the dead-ball years, 1968, the year of the pitcher (6.2%). The odds of a single spot hardly change between eras; how often a game <em>passes through</em> a hopeless-looking spot and gets out of it does, because more runs mean more big innings.</p>
+<h2>The runner on second</h2>
+<p>Since 2020 every regular-season extra half-inning starts with a runner on second. It shortened extra innings (71% of extra-inning games now end in the 10th, against 44% from 1908 to 2019) and it moved the odds: with the visitors' runner on second, a tie at the start of the 10th is 49.4% for the home team, against 52.3% with the bases empty before. The home team won 52.4% of extra-inning games before the rule and 50.0% since (90% interval 47.5% to 52.4%, 1,125 games): the edge of batting last may be gone, though a handful of seasons can't settle it.</p>
+<h2>What the lab can't see</h2>
+<ul>
+<li><strong>Who is playing.</strong> The model knows the state, not the teams: a 3-run lead is worth more for a team with a great bullpen. Its odds are for an average team against an average team of the era.</li>
+<li><strong>The park, the weather, the pitcher's pitch count.</strong> Not in the model.</li>
+<li><strong>Games before 1908, postseason games, and Retrosheet's "deduced" games</strong> (reconstructed from newspaper accounts with partial play-by-play): left out for now.</li>
+<li><strong>The calculator's intervals</strong> say how sure the combination of an era's record and the model is about the long-run rate in that spot. They are not a forecast of how sure anyone could be about one particular game.</li>
+</ul>
+<p>The odds for every spot and every era are in the <a href="../odds/">calculator</a>, and every number in these notes is rebuilt from the data once a year.</p>
+</div>
+<nav class="lab-notes-nav" aria-label="Lab notes"><a href="05-boosting.html">← Step 4: trees (gradient boosting)</a><span></span></nav>
+</main>
+<footer class="lab-footer"><div class="wrap">
+<div class="lab-footer__cols">
+<div><img src="../assets/whiff-logo-chalk.png" alt="Whiff Lab" width="60" height="26">
+<p class="lab-footer__tagline">Open baseball models from free play-by-play, with the data, the steps and the tests in the open.</p></div>
+<div><p class="lab-footer__label">Lab</p><ul class="lab-footer__links">
+<li><a href="../odds/">What are the odds?</a></li><li><a href="../notes/">Lab notes</a></li>
+<li><a href="https://github.com/Jankozeluh/whiff-lab">Code and data on GitHub</a></li></ul></div>
+<div><p class="lab-footer__label">Read</p><ul class="lab-footer__links">
+<li><a href="https://thedailywhiff.com/">The Daily Whiff</a></li>
+<li><a href="https://thedailywhiff.com/the-whiff/">The Whiff, a daily puzzle</a></li></ul></div>
+</div>
+<div class="lab-legal">
+<p>Whiff Lab, an independent fan project, not affiliated with Major League Baseball or its clubs · Data: Retrosheet's
+official releases (through the Chadwick Baseball Bureau's mirror) · The information used here was obtained free of charge from and is copyrighted by Retrosheet.  Interested parties may contact Retrosheet at &quot;www.retrosheet.org&quot;. · Typeface:
+Archivo, SIL Open Font License.</p>
+</div>
+</div></footer>
+<script src="../assets/lab.js?v=5cbb02883b" defer></script>
+</body>
+</html>

@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en" data-data="../data/">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Step 3: a formula (logistic regression) · Whiff Lab notes</title>
+<meta name="description" content="The table and the shrunk table store one number per state, about nine thousand in all. This step throws the table away and asks: can a handful of numbers, built from what a fan knows about baseball, do the same job?">
+<link rel="icon" href="../assets/whiff-site-icon.png">
+<link rel="preload" href="../assets/fonts/archivo-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../assets/lab.css?v=2cb74a474c">
+<script>document.documentElement.classList.add("is-js")</script>
+</head>
+<body>
+<header class="lab-header"><div class="wrap lab-header__row">
+<a class="lab-brand" href="../"><img src="../assets/whiff-logo-chalk.png" alt="" width="70" height="30"><span>Whiff Lab</span></a>
+<nav class="lab-nav" aria-label="Main">
+<button class="lab-nav__open" type="button" aria-expanded="false" aria-controls="lab-menu" aria-label="Open menu"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7.5h16M4 12h16M4 16.5h16" stroke="currentColor" stroke-width="1.8" fill="none"/></svg></button>
+<div class="lab-nav__panel" id="lab-menu">
+<button class="lab-nav__close" type="button" aria-label="Close menu"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" fill="none"/></svg></button>
+<ul><li><a href="../odds/">What are the odds?</a></li><li><a href="../notes/" aria-current="page">Lab notes</a></li><li><a href="https://thedailywhiff.com/">The Daily Whiff</a></li></ul>
+</div>
+</nav>
+</div></header>
+<div class="lab-seam"></div>
+<main class="wrap">
+<p class="lab-kicker">Lab note 4 of 6 · What are the odds?</p>
+<h1 class="lab-title">Step 3: a formula (logistic regression)</h1>
+<div class="lab-prose">
+<p>The table and the shrunk table store one number per state, about nine thousand in all. This step throws the table away and asks: can a handful of numbers, built from what a fan knows about baseball, do the same job?</p>
+<h2>Three things a fan knows</h2>
+<p><strong>How many runs the batting team can expect before the inning ends.</strong> That depends only on the runners and the outs, and the data gives it directly: from every state of innings 1 to 8, the runs the batting team scored before the third out, on average (1908-2016).</p>
+<table>
+<thead>
+<tr>
+<th>Runners</th>
+<th>0 out</th>
+<th>1 out</th>
+<th>2 out</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Bases empty</td>
+<td>0.50</td>
+<td>0.26</td>
+<td>0.10</td>
+</tr>
+<tr>
+<td>First</td>
+<td>0.88</td>
+<td>0.52</td>
+<td>0.22</td>
+</tr>
+<tr>
+<td>Second</td>
+<td>1.13</td>
+<td>0.70</td>
+<td>0.33</td>
+</tr>
+<tr>
+<td>First and second</td>
+<td>1.53</td>
+<td>0.94</td>
+<td>0.45</td>
+</tr>
+<tr>
+<td>Third</td>
+<td>1.38</td>
+<td>0.96</td>
+<td>0.38</td>
+</tr>
+<tr>
+<td>First and third</td>
+<td>1.78</td>
+<td>1.19</td>
+<td>0.52</td>
+</tr>
+<tr>
+<td>Second and third</td>
+<td>2.01</td>
+<td>1.43</td>
+<td>0.62</td>
+</tr>
+<tr>
+<td>Bases loaded</td>
+<td>2.38</td>
+<td>1.60</td>
+<td>0.78</td>
+</tr>
+</tbody>
+</table>
+<p>This is the run expectancy table, one of the oldest tools of baseball analysis. A fresh inning is worth about half a run.</p>
+<p><strong>How much game is left.</strong> Each team has so many half-innings still to bat, and each is worth, on average, a fresh inning's runs.</p>
+<p><strong>How many runs a season scores.</strong> Half a run per inning in 2016 is not half a run in 1930. Each season's numbers are scaled by its runs per game.</p>
+<h2>One number: z</h2>
+<p>Put them together into the lead the home team can expect at the end:</p>
+<pre><code>expected lead = lead now
+              + the batting team's expected runs for the rest of this inning (+ for home, - for visitors)
+              + a fresh inning's runs × (home half-innings left - visitors' half-innings left)
+</code></pre>
+<p>How sure is that? Runs come in bunches, so the uncertainty grows with the time left: roughly with the square root of the half-innings still to play. Divide one by the other:</p>
+<pre><code>z = expected lead / √(half-innings left × run scale + 0.25)
+</code></pre>
+<p>A big <code>z</code> means a lead that is big compared with what can still change.</p>
+<p><img loading="lazy" alt="The home team's record against z" src="figures/logistic.svg" /></p>
+<p>Every orange dot is a group of plate appearances with about the same <code>z</code>. They lie on an S-shaped curve: that is the shape a logistic regression draws.</p>
+<h2>The regression</h2>
+<p>Logistic regression says the log-odds of a home win are a weighted sum of a few inputs:</p>
+<pre><code>log(p / (1 - p)) = a + b₁·z + b₂·(expected lead) + b₃·(tie, bottom half) + b₄·(tie, 9th or later) + b₅·(z in the 9th or later)
+</code></pre>
+<p>The last three inputs let the formula bend where baseball is lumpy: a tie in the bottom half, when the home team can walk off; the 9th inning and later, when there is no "rest of the game" left. The weights are fitted to the counts by maximum likelihood (the same log loss as in the test, minimised on the training years):</p>
+<table>
+<thead>
+<tr>
+<th>Weight</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>a (intercept)</td>
+<td>0.110</td>
+</tr>
+<tr>
+<td>b₁ (z)</td>
+<td>2.076</td>
+</tr>
+<tr>
+<td>b₂ (expected lead)</td>
+<td>-0.068</td>
+</tr>
+<tr>
+<td>b₃ (tie, bottom)</td>
+<td>-0.025</td>
+</tr>
+<tr>
+<td>b₄ (tie, 9th+)</td>
+<td>-0.156</td>
+</tr>
+<tr>
+<td>b₅ (z, 9th+)</td>
+<td>-0.193</td>
+</tr>
+</tbody>
+</table>
+<p>Six numbers instead of nine thousand. <code>z</code> does nearly all the work.</p>
+<h2>The rule it knew in advance</h2>
+<p>Since 2020, an extra inning starts with a runner on second. The formula can be told so: in the 10th, the home team's coming half-inning is worth what a runner on second with nobody out is worth (1.13 runs), not a fresh inning's 0.50. No data needed. The table and the shrunk table, fitted on games before 2020, have never seen the rule.</p>
+<h2>Result</h2>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>All</th>
+<th>Rare states</th>
+<th>Extra innings since 2020</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Lookup table</td>
+<td>0.4671</td>
+<td>0.1526</td>
+<td>0.5739</td>
+</tr>
+<tr>
+<td>Shrunk table</td>
+<td>0.4670</td>
+<td>0.1393</td>
+<td>0.5695</td>
+</tr>
+<tr>
+<td>Logistic regression</td>
+<td>0.4683</td>
+<td>0.1371</td>
+<td>0.5503</td>
+</tr>
+</tbody>
+</table>
+<p>On average the formula is a touch worse than the table: six numbers can't capture every quirk of nine thousand states (in the 9th inning especially, where it scores 0.2270 against the table's 0.2173). But it is the best of the three on rare states, where it never says 0% or 100% from four games, and by far the best in the extra innings since 2020, 4% better than the table, because it was told the new rule. A model built on understanding can be right about situations no data has shown it yet.</p>
+<p><strong>Next:</strong> <a href="05-boosting.html">Step 4: trees</a>.</p>
+</div>
+<nav class="lab-notes-nav" aria-label="Lab notes"><a href="03-shrinkage.html">← Step 2: borrow strength (empirical Bayes)</a><a href="05-boosting.html">Step 4: trees (gradient boosting) →</a></nav>
+</main>
+<footer class="lab-footer"><div class="wrap">
+<div class="lab-footer__cols">
+<div><img src="../assets/whiff-logo-chalk.png" alt="Whiff Lab" width="60" height="26">
+<p class="lab-footer__tagline">Open baseball models from free play-by-play, with the data, the steps and the tests in the open.</p></div>
+<div><p class="lab-footer__label">Lab</p><ul class="lab-footer__links">
+<li><a href="../odds/">What are the odds?</a></li><li><a href="../notes/">Lab notes</a></li>
+<li><a href="https://github.com/Jankozeluh/whiff-lab">Code and data on GitHub</a></li></ul></div>
+<div><p class="lab-footer__label">Read</p><ul class="lab-footer__links">
+<li><a href="https://thedailywhiff.com/">The Daily Whiff</a></li>
+<li><a href="https://thedailywhiff.com/the-whiff/">The Whiff, a daily puzzle</a></li></ul></div>
+</div>
+<div class="lab-legal">
+<p>Whiff Lab, an independent fan project, not affiliated with Major League Baseball or its clubs · Data: Retrosheet's
+official releases (through the Chadwick Baseball Bureau's mirror) · The information used here was obtained free of charge from and is copyrighted by Retrosheet.  Interested parties may contact Retrosheet at &quot;www.retrosheet.org&quot;. · Typeface:
+Archivo, SIL Open Font License.</p>
+</div>
+</div></footer>
+<script src="../assets/lab.js?v=5cbb02883b" defer></script>
+</body>
+</html>

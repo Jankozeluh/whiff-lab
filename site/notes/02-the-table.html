@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en" data-data="../data/">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Step 1: just count · Whiff Lab notes</title>
+<meta name="description" content="The plainest possible model: for each state, the share of games the home team won from it. Home team down a run in the bottom of the 9th, nobody on, nobody out? Find every time it happened and count. No formula, no assumptions. This is the lookup table, and it is the model every other step has to beat.">
+<link rel="icon" href="../assets/whiff-site-icon.png">
+<link rel="preload" href="../assets/fonts/archivo-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../assets/lab.css?v=2cb74a474c">
+<script>document.documentElement.classList.add("is-js")</script>
+</head>
+<body>
+<header class="lab-header"><div class="wrap lab-header__row">
+<a class="lab-brand" href="../"><img src="../assets/whiff-logo-chalk.png" alt="" width="70" height="30"><span>Whiff Lab</span></a>
+<nav class="lab-nav" aria-label="Main">
+<button class="lab-nav__open" type="button" aria-expanded="false" aria-controls="lab-menu" aria-label="Open menu"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7.5h16M4 12h16M4 16.5h16" stroke="currentColor" stroke-width="1.8" fill="none"/></svg></button>
+<div class="lab-nav__panel" id="lab-menu">
+<button class="lab-nav__close" type="button" aria-label="Close menu"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" fill="none"/></svg></button>
+<ul><li><a href="../odds/">What are the odds?</a></li><li><a href="../notes/" aria-current="page">Lab notes</a></li><li><a href="https://thedailywhiff.com/">The Daily Whiff</a></li></ul>
+</div>
+</nav>
+</div></header>
+<div class="lab-seam"></div>
+<main class="wrap">
+<p class="lab-kicker">Lab note 2 of 6 · What are the odds?</p>
+<h1 class="lab-title">Step 1: just count</h1>
+<div class="lab-prose">
+<p>The plainest possible model: for each state, the share of games the home team won from it. Home team down a run in the bottom of the 9th, nobody on, nobody out? Find every time it happened and count. No formula, no assumptions. This is the lookup table, and it is the model every other step has to beat.</p>
+<h2>How to score a forecast</h2>
+<p>A forecast of "70%" is neither right nor wrong on a single game. It is right if, over all the times it says 70%, the team wins about 70% of the time, and useful if it says 95% or 5% when it can. Two scores measure this, both lower-is-better.</p>
+<p><strong>Log loss</strong> is the average surprise. If the model gave the winner a chance <code>p</code>, the surprise is <code>-log(p)</code>: 0.105 for a 90% favourite that won, 2.303 for a 10% long shot that won. A model that always says 50% scores <code>log 2 = 0.693</code>. Log loss punishes confident mistakes hard: a forecast of 0% for something that happens costs infinity. That is why no model here may go below 0.1% or above 99.9%.</p>
+<p><strong>Brier score</strong> is the average squared distance between the forecast and what happened (1 for a win, 0 for a loss). Always saying 50% scores 0.25. It is gentler on long shots and easier to read, so we report both.</p>
+<h2>The honest test</h2>
+<p>A model must be scored on games it has not seen, or it will look better than it is: the table "predicts" its own games perfectly in the rare states, because it memorised them.</p>
+<p>The usual fix is to set aside a random sample of games. We don't, for two reasons. The plate appearances of one game share an ending, so splitting a season's games at random still leaks. And what we care about is the future: how a model fitted on the past does on seasons that come after it, including rule changes it could not know about.</p>
+<p>So the split is by time. <strong>Every model is fitted on 1908-2016 and scored on 2017-2025</strong>: 20,056 games and 1,523,556 plate appearances. The settings of each model were picked on 2013-2016 with the models fitted on 1908-2012, before the test seasons were looked at. Intervals come from a bootstrap by game: resample the test games with replacement a thousand times and see how much the score moves.</p>
+<h2>Result</h2>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>Log loss</th>
+<th>Brier</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>The home team's share only (one number)</td>
+<td>0.6925</td>
+<td>0.2497</td>
+</tr>
+<tr>
+<td>Lookup table</td>
+<td>0.4671</td>
+<td>0.1569</td>
+</tr>
+</tbody>
+</table>
+<p>Knowing the state cuts the average surprise by 33%. The table's log loss has a 95% interval of 0.4628 to 0.4718 from the bootstrap: that is the width of luck in nine seasons of games, worth keeping in mind when the next steps differ by less.</p>
+<p><img loading="lazy" alt="How often each forecast came true, test seasons" src="figures/calibration.svg" /></p>
+<p>The table is also well calibrated: when it says 30%, the home team wins about 30% of the time. Each dot is a group of forecasts within 5 points of each other; on the dashed line, the forecasts came true exactly as often as they said.</p>
+<h2>Where the table breaks</h2>
+<p><img loading="lazy" alt="Most states are rare, but most plate appearances happen in common states" src="figures/sparsity.svg" /></p>
+<p>The trouble is the long tail. Most plate appearances happen in a few hundred common states, which have tens of thousands of games behind them. But thousands of states came up fewer than a hundred times. A state seen four times, with four home wins, makes the table say 100% (clipped to 99.9%). Seen in a test season, one loss from such a state costs as much as a few hundred ordinary plate appearances.</p>
+<p>On the 0.8% of test plate appearances in states seen fewer than 100 times in training, the table's log loss is 0.1526. The next step is about those.</p>
+<p><strong>Next:</strong> <a href="03-shrinkage.html">Step 2: borrow strength</a>.</p>
+</div>
+<nav class="lab-notes-nav" aria-label="Lab notes"><a href="01-the-data.html">← From scorebooks to fifteen million game states</a><a href="03-shrinkage.html">Step 2: borrow strength (empirical Bayes) →</a></nav>
+</main>
+<footer class="lab-footer"><div class="wrap">
+<div class="lab-footer__cols">
+<div><img src="../assets/whiff-logo-chalk.png" alt="Whiff Lab" width="60" height="26">
+<p class="lab-footer__tagline">Open baseball models from free play-by-play, with the data, the steps and the tests in the open.</p></div>
+<div><p class="lab-footer__label">Lab</p><ul class="lab-footer__links">
+<li><a href="../odds/">What are the odds?</a></li><li><a href="../notes/">Lab notes</a></li>
+<li><a href="https://github.com/Jankozeluh/whiff-lab">Code and data on GitHub</a></li></ul></div>
+<div><p class="lab-footer__label">Read</p><ul class="lab-footer__links">
+<li><a href="https://thedailywhiff.com/">The Daily Whiff</a></li>
+<li><a href="https://thedailywhiff.com/the-whiff/">The Whiff, a daily puzzle</a></li></ul></div>
+</div>
+<div class="lab-legal">
+<p>Whiff Lab, an independent fan project, not affiliated with Major League Baseball or its clubs · Data: Retrosheet's
+official releases (through the Chadwick Baseball Bureau's mirror) · The information used here was obtained free of charge from and is copyrighted by Retrosheet.  Interested parties may contact Retrosheet at &quot;www.retrosheet.org&quot;. · Typeface:
+Archivo, SIL Open Font License.</p>
+</div>
+</div></footer>
+<script src="../assets/lab.js?v=5cbb02883b" defer></script>
+</body>
+</html>

@@ -1,0 +1,32 @@
+<section class="lab-home__intro">
+<div>
+<p class="lab-kicker">Whiff Lab</p>
+<h1 class="lab-display">Baseball's numbers, worked out in the open</h1>
+</div>
+<ul class="lab-facts">
+<li><strong>Data</strong> Retrosheet play-by-play, {{s.first_season}}–{{s.last_season}}, free and open</li>
+<li><strong>Method</strong> every model tested on seasons it never saw</li>
+<li><strong>Open</strong> the code, the tables and the notes on GitHub</li>
+</ul>
+</section>
+<p class="lab-intro">Whiff Lab builds baseball models from free, openly licensed data and shows all of its work: where the data comes from, each step from the plainest model to the strongest, the test that compares them, and what the numbers say that you won't find elsewhere.</p>
+
+<p class="lab-label">Experiments</p>
+<article class="lab-card">
+<p class="lab-kicker">Experiment 1 · Win probability</p>
+<h2 class="lab-card__title"><a href="odds/">What are the odds?</a></h2>
+<p class="lab-card__text">Any moment of any game since {{s.first_season}}: the home team's chance to win, how sure that number is, how many real games reached the same spot, and the latest of them. Learned from {{s.plate_appearances|int}} plate appearances.</p>
+<ul class="lab-card__finds">
+<li>The longest odds ever overcome: {{cb.0.winner}} on {{cb.0.date|date}}, {{cb.0.moment}}. About {{cb.0.low|onein}}.</li>
+<li>Comebacks rise and fall with scoring: across {{nseasons}} seasons the two move together (correlation {{f.comeback_rpg_r|f2}}).</li>
+<li>Since the runner on second, the home team's edge in extra innings has shrunk from {{x.before.home_win|pct1}} to {{x.runner.home_win|pct1}}.</li>
+<li>A table of nine thousand game states is hard to beat. Smoothing helps where it is thin, and a formula wins when the rules change.</li>
+</ul>
+<p><a class="lab-more" href="odds/">Open the experiment</a></p>
+</article>
+
+<p class="lab-label">How the lab works</p>
+<div class="lab-sec" style="margin-top:0">
+<p>The data is Retrosheet's: every play of {{s.games_parsed|int}} AL and NL games, typed in by volunteers from scorebooks and newspapers, free for any use with its notice. The lab replays each game and checks that it ends on the official final score (all of them do). The models are built one step at a time, and each step is explained in a <a href="notes/">lab note</a> in plain words, with what it gains over the last one on a test it never saw.</p>
+<p>Everything reruns by itself once a year, after Retrosheet publishes the new season: free tools on a public repository, nothing to pay for and no account. The code and the tables are on <a href="https://github.com/Jankozeluh/whiff-lab">GitHub</a>.</p>
+</div>

@@ -1,0 +1,127 @@
+<p class="lab-kicker">Experiment 1 · Win probability</p>
+<h1 class="lab-title">What are the odds?</h1>
+<p class="lab-intro">Pick any moment of a game: the inning, the outs, the runners, the score, the era. You get the home team's chance to win, how sure that number is, how many real games reached the same spot, and the latest of them. It is learned from {{s.plate_appearances|int}} plate appearances of {{s.games_used|int}} games, {{s.first_season}} to {{s.last_season}}.</p>
+
+<section class="odds-calc" id="odds-calc" aria-label="Win probability calculator">
+<div class="odds-spot">
+<p class="odds-mini"><span>Home team</span><b id="odds-mini-p">–</b><a href="#odds-out">details</a></p>
+<fieldset class="odds-row"><legend>Inning</legend>
+<div class="odds-btns odds-btns--inning">
+<button class="odds-btn" type="button" data-set="inning=1">1</button><button class="odds-btn" type="button" data-set="inning=2">2</button><button class="odds-btn" type="button" data-set="inning=3">3</button><button class="odds-btn" type="button" data-set="inning=4">4</button><button class="odds-btn" type="button" data-set="inning=5">5</button><button class="odds-btn" type="button" data-set="inning=6">6</button><button class="odds-btn" type="button" data-set="inning=7">7</button><button class="odds-btn" type="button" data-set="inning=8">8</button><button class="odds-btn" type="button" data-set="inning=9">9</button><button class="odds-btn" type="button" data-set="inning=10" aria-label="10th or later">10+</button>
+</div></fieldset>
+<fieldset class="odds-row"><legend>Half</legend>
+<div class="odds-btns odds-btns--2">
+<button class="odds-btn" type="button" data-set="bottom=0">Top<small>visitors bat</small></button><button class="odds-btn" type="button" data-set="bottom=1">Bottom<small>home team bats</small></button>
+</div></fieldset>
+<div class="odds-two">
+<fieldset class="odds-row"><legend>Runners <span class="odds-hint">tap a base</span></legend>
+<div class="odds-diamond">
+<button class="odds-base odds-base--2" type="button" data-base="2"><span class="screen-reader-text">Runner on second</span></button>
+<button class="odds-base odds-base--3" type="button" data-base="4"><span class="screen-reader-text">Runner on third</span></button>
+<button class="odds-base odds-base--1" type="button" data-base="1"><span class="screen-reader-text">Runner on first</span></button>
+</div></fieldset>
+<fieldset class="odds-row"><legend>Outs</legend>
+<div class="odds-btns odds-btns--3">
+<button class="odds-btn" type="button" data-set="outs=0">0</button><button class="odds-btn" type="button" data-set="outs=1">1</button><button class="odds-btn" type="button" data-set="outs=2">2</button>
+</div></fieldset>
+</div>
+<fieldset class="odds-row"><legend>Score</legend>
+<div class="odds-score">
+<div class="odds-step"><span>Visitors</span><button type="button" data-step="away:-1" aria-label="Visitors one run fewer">−</button><output id="odds-away" aria-live="polite">3</output><button type="button" data-step="away:1" aria-label="Visitors one run more">+</button></div>
+<div class="odds-step"><span>Home</span><button type="button" data-step="home:-1" aria-label="Home team one run fewer">−</button><output id="odds-home" aria-live="polite">2</output><button type="button" data-step="home:1" aria-label="Home team one run more">+</button></div>
+</div></fieldset>
+<div class="odds-row"><label class="odds-legend" for="odds-era">Era</label>
+<select class="odds-select" id="odds-era"><option value="runner">Runner on second, 2020–{{s.last_season}}</option></select></div>
+</div>
+
+<div class="odds-out" id="odds-out" aria-live="polite">
+<p class="lab-kicker">The home team's chance to win</p>
+<p class="odds-sit" id="odds-sit">Bottom of the 9th, no outs, bases empty, home team trails 3–2</p>
+<p class="odds-big"><strong id="odds-home-p">–</strong><span>Visitors <b id="odds-away-p">–</b></span></p>
+<div class="odds-bar" id="odds-bar" aria-hidden="true"></div>
+<dl class="odds-facts">
+<div><dt>90% interval</dt><dd id="odds-range">–</dd></div>
+<div><dt>Games from here, this era</dt><dd id="odds-n">–</dd></div>
+<div><dt>Home team won</dt><dd id="odds-w">–</dd></div>
+</dl>
+<div class="odds-notes" id="odds-notes"></div>
+<div id="odds-games-wrap" hidden><h3>Real games from this spot</h3><ul class="odds-games" id="odds-games"></ul></div>
+<p class="odds-era-note" id="odds-era-note"></p>
+</div>
+</section>
+
+<section class="lab-sec" aria-labelledby="strip-h">
+<h2 id="strip-h">The same spot in every era</h2>
+<p class="lab-lede">Your spot, era by era: each dot is that era's odds, each line its 90% interval. An era with few games from this spot leans on the model and stays close to the others; an era with many shows its own record.</p>
+<ol class="odds-strip" id="odds-strip"></ol>
+<p class="lab-note" id="odds-strip-axis"></p>
+</section>
+
+<ul class="lab-jump" aria-label="Findings">
+<li><a href="#eras">A century of odds</a></li><li><a href="#comebacks">Greatest comebacks</a></li><li><a href="#follow">Comebacks follow runs</a></li><li><a href="#home">Home field</a></li><li><a href="#runner">Runner on second</a></li><li><a href="#models">Four models, one test</a></li><li><a href="#method">How it was made</a></li>
+</ul>
+
+<section class="lab-sec" id="eras">
+<h2>A century of odds: what changed, and what didn't</h2>
+<p>Scoring has swung from {{s.rpg_low.rpg|f2}} runs per team per game ({{s.rpg_low.year|year}}) to {{s.rpg_high.rpg|f2}} ({{s.rpg_high.year|year}}), and you would expect a lead to be worth much more when runs are scarce. Mostly, it isn't. The same spot gives nearly the same odds in every era: a two-run lead or a bases-loaded jam is worth about what it was worth a hundred years ago. Where eras do differ, the gaps are a few points, and they follow the runs. A home team down a run in the bottom of the 9th came back {{f.spots.1.eras.deadball.p|pct1}} of the time in the dead-ball era and {{f.spots.1.eras.liveball.p|pct1}} in the live-ball years that followed.</p>
+<div class="lab-table"><table><thead><tr id="spots-head"><th>Spot</th></tr></thead><tbody id="spots-body"><tr><td>Loading…</td></tr></tbody></table></div>
+<p class="lab-note">The home team's chance to win from each spot, by era (hover a number for its 90% interval and the games behind it). Each era's own record, combined with the model fitted on all eras by empirical Bayes. A test backs this up: leaving one era out and predicting it from the others, telling the model the era's scoring level did not help (<a href="../notes/06-eras.html">lab note 6</a>).</p>
+</section>
+
+<section class="lab-sec" id="comebacks">
+<h2>The greatest comebacks since {{s.first_season}}</h2>
+<p>For every game, the lowest chance the eventual winner had before any plate appearance, by the final model. {{f.comeback_share.under10|pct1}} of all games were won by a team that was below 10% at some point, {{f.comeback_share.under1|pct2}} by a team below 1%, and {{f.comeback_share.under_1_in_1000|int}} games in {{nseasons}} seasons by a team below 1 in 1,000. The longest odds of all: {{cb.0.winner}}, {{cb.0.moment}}, on {{cb.0.date|date}}. They won {{cb.0.winner_runs|int}}–{{cb.0.loser_runs|int}}.</p>
+<div class="lab-table"><table><thead><tr><th class="num">#</th><th>Date</th><th>Game, and the winner's low point</th><th class="num">Odds then</th><th>Retrosheet</th></tr></thead><tbody id="comebacks-body"><tr><td colspan="5">Loading…</td></tr></tbody></table></div>
+<p class="lab-note">Odds beyond 1 in 1,000 are the model's reach past the data: below that point there are too few comebacks to check them one by one, though in total they match (lab note 5). Box scores open on Retrosheet.</p>
+</section>
+
+<section class="lab-sec" id="follow">
+<h2>Comebacks follow the runs</h2>
+<p>Put two things side by side that are rarely shown together: how often a game is won from far behind, and how many runs a season scores. Across {{nseasons}} seasons they rise and fall together (correlation {{f.comeback_rpg_r|f2}}). The live-ball 1920s and 1930s were the golden age of the comeback ({{seasons.1930.under10|pct1}} of games in 1930, the top scoring season); the dead-ball years and 1968, the year of the pitcher, its lows ({{seasons.1908.under10|pct1}} in 1908, {{seasons.1968.under10|pct1}} in 1968).</p>
+<figure class="lab-ch" data-chart="comebacks"><p class="lab-note">Loading the chart…</p></figure>
+<p class="lab-note">Top: share of games won by a team that fell below a 10% chance at some point. Bottom: runs per team per game. One point per season, games with play-by-play only.</p>
+</section>
+
+<section class="lab-sec" id="home">
+<h2>Home field: about 54%, and where it lives</h2>
+<p>The home team wins about 54% of the time, and has for 125 seasons. Single seasons wander, from {{seasons.1917.home_win|pct1}} in 1917 to {{seasons.1931.home_win|pct1}} in 1931, but no decade has averaged below 53.5% or above 55.5%. In 2020, with no fans in the stands, the home team won {{seasons.2020.home_win|pct1}}, more than in {{seasons.2019.year|year}} ({{seasons.2019.home_win|pct1}}) or {{seasons.2021.year|year}} ({{seasons.2021.home_win|pct1}}): whatever the edge is, it is not just the crowd (a 60-game season is a small sample, and a few teams played their home games elsewhere).</p>
+<figure class="lab-ch" data-chart="homefield"><p class="lab-note">Loading the chart…</p></figure>
+<p class="lab-note">The home team's share of wins in every AL and NL season since 1901 (dots), with a running 11-season average (line). Every game in Retrosheet's game logs, ties left out.</p>
+<p>Where does the edge come from? In a tie game, the home team's chance at the start of the top of an inning slides from {{tie.before.top.0|pct1}} in the 1st to {{tie.before.top.5|pct1}} in the 6th: home teams build their edge over the game by outscoring their visitors a little. Late in the game the last at-bat takes over: in a tie in the bottom of the 9th the home team wins {{tie.before.bottom.8|pct1}}.</p>
+<figure class="lab-ch" data-chart="ties"><p class="lab-note">Loading the chart…</p></figure>
+</section>
+
+<section class="lab-sec" id="runner">
+<h2>The runner on second</h2>
+<p>Since 2020 every regular-season extra half-inning starts with a runner on second. It did what it was meant to do: {{x.runner.over_in_10th|pct0}} of extra-inning games now end in the 10th, against {{x.before.over_in_10th|pct0}} before, and the longest has gone {{x.runner.longest|int}} innings (before: {{x.before.longest|int}}). It also moved the odds. A tie at the start of the 10th was a {{tie.before.top.9|pct1}} chance for the home team; with the visitors' free runner on second it is {{tie.runner.top.9|pct1}}. A home team starting the bottom of the 10th tied, with its own runner on second, wins {{tie.runner.bottom.9|pct1}} (with the bases empty it was {{tie.before.bottom.9|pct1}}).</p>
+<p>And the home team's edge in extra innings may be gone: it won {{x.before.home_win|pct1}} of extra-inning games from 1908 to 2019, and {{x.runner.home_win|pct1}} of {{x.runner.games|int}} since (90% interval {{x.runner.home_win_lo|pct1}} to {{x.runner.home_win_hi|pct1}}). One reading: batting last was worth something because the home team knew what it needed; now the visitors start with a runner and often score first, and the home team has to answer from behind.</p>
+</section>
+
+<section class="lab-sec" id="models">
+<h2>Four models, one honest test</h2>
+<p>Each model was fitted on {{h.train}} and scored on the {{h.games|int}} games of {{h.test}}, which it never saw. The score is the log loss: the average surprise per plate appearance, lower is better (a coin flip scores 0.693). Intervals come from resampling whole games.</p>
+<div class="lab-table"><table>
+<thead><tr><th>Model</th><th class="num">Log loss</th><th class="num">Brier</th><th class="num">Rare spots</th><th class="num">Extra innings since 2020</th></tr></thead>
+<tbody>
+<tr><th>0. The home team's share only</th><td class="num">{{h.home.ll.all|f4}}</td><td class="num">{{h.home.brier.all|f4}}</td><td class="num">{{h.home.ll.rare|f4}}</td><td class="num">{{h.home.ll.x20|f4}}</td></tr>
+<tr><th>1. Lookup table</th><td class="num">{{h.table.ll.all|f4}}</td><td class="num">{{h.table.brier.all|f4}}</td><td class="num">{{h.table.ll.rare|f4}}</td><td class="num">{{h.table.ll.x20|f4}}</td></tr>
+<tr><th>2. Shrunk table (empirical Bayes)</th><td class="num">{{h.shrunk.ll.all|f4}}</td><td class="num">{{h.shrunk.brier.all|f4}}</td><td class="num">{{h.shrunk.ll.rare|f4}}</td><td class="num">{{h.shrunk.ll.x20|f4}}</td></tr>
+<tr><th>3. Logistic regression</th><td class="num">{{h.logistic.ll.all|f4}}</td><td class="num">{{h.logistic.brier.all|f4}}</td><td class="num">{{h.logistic.ll.rare|f4}}</td><td class="num">{{h.logistic.ll.x20|f4}}</td></tr>
+<tr><th>4. Gradient boosting</th><td class="num">{{h.boosted.ll.all|f4}}</td><td class="num">{{h.boosted.brier.all|f4}}</td><td class="num">{{h.boosted.ll.rare|f4}}</td><td class="num">{{h.boosted.ll.x20|f4}}</td></tr>
+</tbody></table></div>
+<p class="lab-note">Rare spots: states seen fewer than 100 times in training ({{h.share.rare|pct1}} of test plate appearances). Extra innings since 2020: {{h.share.x20|pct1}}.</p>
+<ul>
+<li><strong>The table does almost all the work.</strong> Knowing the state cuts the surprise by {{h.table.gain_over_home|pct0}} against knowing nothing but home field. With nine thousand states and fifteen million plate appearances, the plain record is very hard to beat on average.</li>
+<li><strong>Shrinking helps where data is thin.</strong> Empirical Bayes beats the table by a hair overall (the whole interval of the gain is above zero) and by {{h.shrunk.gain.rare|pct0}} on rare spots, where the table says 0% or 100% from a handful of games.</li>
+<li><strong>A formula wins when the rules change.</strong> The logistic regression, six numbers on top of a little baseball logic, is a touch worse on average but the best on rare spots, and by far the best in the extra innings since 2020: its formula knows what a runner on second is worth, while the other models had never seen the rule.</li>
+<li><strong>The trees learn the new rule fast.</strong> Given three seasons of it (fitted on 1908–2022), gradient boosting is the best in the extra innings of 2023 on, {{r.boosted.gain|pct0}} better than the table. That is the final model behind the calculator, fitted on every season.</li>
+</ul>
+</section>
+
+<section class="lab-sec" id="method">
+<h2>How it was made</h2>
+<p>Retrosheet's event files list every play of {{s.games_parsed|int}} regular-season AL and NL games from {{s.first_season}} to {{s.last_season}}. The lab's parser replays each game, keeps the runners, the outs and the score, and writes down the state as each batter steps in. Every one of those games ends on the final score in Retrosheet's game logs ({{s.score_match|pct1}}), so every state in between is right. Games scheduled for seven innings, games stopped before the ninth, and ties are left out: {{s.games_used|int}} games remain. The whole pipeline reruns by itself once a year, after Retrosheet's December release.</p>
+<p><a class="lab-more" href="../notes/">Read the lab notes</a>: the data, then each model in plain words, the test, and the eras.</p>
+</section>
+
+<p class="lab-credit">Data: Retrosheet's official releases, through the Chadwick Baseball Bureau's mirror on GitHub. {{notice}} Each era's odds combine its own record with the model; the 90% intervals say how sure that combination is. Independent fan project, not affiliated with MLB.</p>

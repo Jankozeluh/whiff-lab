@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en" data-data="../data/">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Step 4: trees (gradient boosting) · Whiff Lab notes</title>
+<meta name="description" content="The table knows every quirk but no logic; the formula knows the logic but smooths over the quirks. Gradient boosting tries to have both: it starts from nothing, and adds small decision trees one at a time, each one fixing what the trees before it got wrong.">
+<link rel="icon" href="../assets/whiff-site-icon.png">
+<link rel="preload" href="../assets/fonts/archivo-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../assets/lab.css?v=2cb74a474c">
+<script>document.documentElement.classList.add("is-js")</script>
+</head>
+<body>
+<header class="lab-header"><div class="wrap lab-header__row">
+<a class="lab-brand" href="../"><img src="../assets/whiff-logo-chalk.png" alt="" width="70" height="30"><span>Whiff Lab</span></a>
+<nav class="lab-nav" aria-label="Main">
+<button class="lab-nav__open" type="button" aria-expanded="false" aria-controls="lab-menu" aria-label="Open menu"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7.5h16M4 12h16M4 16.5h16" stroke="currentColor" stroke-width="1.8" fill="none"/></svg></button>
+<div class="lab-nav__panel" id="lab-menu">
+<button class="lab-nav__close" type="button" aria-label="Close menu"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" fill="none"/></svg></button>
+<ul><li><a href="../odds/">What are the odds?</a></li><li><a href="../notes/" aria-current="page">Lab notes</a></li><li><a href="https://thedailywhiff.com/">The Daily Whiff</a></li></ul>
+</div>
+</nav>
+</div></header>
+<div class="lab-seam"></div>
+<main class="wrap">
+<p class="lab-kicker">Lab note 5 of 6 · What are the odds?</p>
+<h1 class="lab-title">Step 4: trees (gradient boosting)</h1>
+<div class="lab-prose">
+<p>The table knows every quirk but no logic; the formula knows the logic but smooths over the quirks. Gradient boosting tries to have both: it starts from nothing, and adds small decision trees one at a time, each one fixing what the trees before it got wrong.</p>
+<h2>How it works</h2>
+<p>A decision tree asks a few yes-or-no questions ("is the home team ahead by 2 or more?", "is it the 9th or later?", "are there two outs?") and gives each group of answers its own number. One small tree is a crude model. Boosting fits a first tree, looks at where it is off, fits a second tree to those errors, and so on: four hundred trees here, each allowed 31 groups and nudging the forecast only a little (a learning rate of 0.1).</p>
+<p>Two settings keep it honest:</p>
+<ul>
+<li><strong>Every group must hold enough data</strong> (at least 200 rows of the counts table) and the trees' numbers are shrunk a little (L2 regularisation): no group gets its own 0% from four games.</li>
+<li><strong>A bigger home lead can never lower the home team's chance</strong> (a monotonic constraint on the score). The data agrees almost everywhere, but where states are rare, a tree could otherwise invent a dip.</li>
+</ul>
+<p>The trees see the state as it is (inning, half, outs, each base, the score) plus one more input: whether this is an extra inning with the runner on second. They don't get the run expectancy or <code>z</code>: tried on 2013-2016, those inputs did not help them.</p>
+<h2>Result on the test</h2>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>All</th>
+<th>Rare states</th>
+<th>Extra innings since 2020</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Lookup table</td>
+<td>0.4671</td>
+<td>0.1526</td>
+<td>0.5739</td>
+</tr>
+<tr>
+<td>Shrunk table</td>
+<td>0.4670</td>
+<td>0.1393</td>
+<td>0.5695</td>
+</tr>
+<tr>
+<td>Logistic regression</td>
+<td>0.4683</td>
+<td>0.1371</td>
+<td>0.5503</td>
+</tr>
+<tr>
+<td>Gradient boosting</td>
+<td>0.4672</td>
+<td>0.1404</td>
+<td>0.5711</td>
+</tr>
+</tbody>
+</table>
+<p>Honestly: on this test, the most complex model does not beat the table. Its log loss minus the table's lies between -0.00004 and 0.00025 (95%, resampling games): no measurable difference. It does better than the table on rare states, like every smoothing model, and in the extra innings since 2020 it is only a little better than the table (0.5711 against 0.5739): its rule input was zero in every training game, so it had nothing to learn from.</p>
+<h2>Given a few seasons of the new rule</h2>
+<p>What if the trees had seen the rule? Fit everything on 1908-2022, three seasons of the runner on second, and score the extra innings of 2023 onward (626 games):</p>
+<p><img loading="lazy" alt="Extra innings with the runner on second: before and after the models saw it" src="figures/rule.svg" /></p>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>Log loss, extra innings 2023 on</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Lookup table</td>
+<td>0.5585</td>
+</tr>
+<tr>
+<td>Shrunk table</td>
+<td>0.5555</td>
+</tr>
+<tr>
+<td>Logistic regression</td>
+<td>0.5403</td>
+</tr>
+<tr>
+<td>Gradient boosting</td>
+<td>0.5322</td>
+</tr>
+</tbody>
+</table>
+<p>Now the trees are the best, 5% better than the table. The table can't learn the rule because a "runner on second, nobody out, top of the 10th" state looks the same in 1985 (after a leadoff double) and in 2023 (by rule); only the trees were given the input that tells them apart. The formula is a close second, still running on what it was told rather than what it saw.</p>
+<h2>The final model</h2>
+<p>The calculator uses gradient boosting fitted on every season, 1908 to 2025. It is as good as the table where data is plentiful, smoother where it is thin, and it has learned the extra-inning rule.</p>
+<p>One more check for the comebacks list, which looks at odds far below 1%. Counting the long-shot side of every state, the final model's expected number of wins can be compared with what happened (on games it has seen, so this checks the shape, not the forecast):</p>
+<table>
+<thead>
+<tr>
+<th>The long shot's chance</th>
+<th>Plate appearances</th>
+<th>Expected wins</th>
+<th>Actual wins</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0.01% to 0.05%</td>
+<td>129,365</td>
+<td>34.5</td>
+<td>33</td>
+</tr>
+<tr>
+<td>0.05% to 0.1%</td>
+<td>108,557</td>
+<td>80.5</td>
+<td>77</td>
+</tr>
+<tr>
+<td>0.1% to 0.5%</td>
+<td>448,838</td>
+<td>1229.4</td>
+<td>1,320</td>
+</tr>
+<tr>
+<td>0.5% to 1%</td>
+<td>392,605</td>
+<td>2989.2</td>
+<td>3,083</td>
+</tr>
+<tr>
+<td>1% to 2%</td>
+<td>509,961</td>
+<td>7682.0</td>
+<td>8,249</td>
+</tr>
+</tbody>
+</table>
+<p>Close where it matters for the list, and a little short between 0.1% and 2%: comebacks from there happen a few percent more often than the model says. Below 1 in 10,000 there are too few games to check.</p>
+<p><strong>Next:</strong> <a href="06-eras.html">Eras: what changes, and what doesn't</a>.</p>
+</div>
+<nav class="lab-notes-nav" aria-label="Lab notes"><a href="04-logistic.html">← Step 3: a formula (logistic regression)</a><a href="06-eras.html">Eras: what changes, and what doesn&#x27;t →</a></nav>
+</main>
+<footer class="lab-footer"><div class="wrap">
+<div class="lab-footer__cols">
+<div><img src="../assets/whiff-logo-chalk.png" alt="Whiff Lab" width="60" height="26">
+<p class="lab-footer__tagline">Open baseball models from free play-by-play, with the data, the steps and the tests in the open.</p></div>
+<div><p class="lab-footer__label">Lab</p><ul class="lab-footer__links">
+<li><a href="../odds/">What are the odds?</a></li><li><a href="../notes/">Lab notes</a></li>
+<li><a href="https://github.com/Jankozeluh/whiff-lab">Code and data on GitHub</a></li></ul></div>
+<div><p class="lab-footer__label">Read</p><ul class="lab-footer__links">
+<li><a href="https://thedailywhiff.com/">The Daily Whiff</a></li>
+<li><a href="https://thedailywhiff.com/the-whiff/">The Whiff, a daily puzzle</a></li></ul></div>
+</div>
+<div class="lab-legal">
+<p>Whiff Lab, an independent fan project, not affiliated with Major League Baseball or its clubs · Data: Retrosheet's
+official releases (through the Chadwick Baseball Bureau's mirror) · The information used here was obtained free of charge from and is copyrighted by Retrosheet.  Interested parties may contact Retrosheet at &quot;www.retrosheet.org&quot;. · Typeface:
+Archivo, SIL Open Font License.</p>
+</div>
+</div></footer>
+<script src="../assets/lab.js?v=5cbb02883b" defer></script>
+</body>
+</html>

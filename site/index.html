@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en" data-data="data/">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Whiff Lab: Open Baseball Models From Free Data</title>
+<meta name="description" content="Baseball models built from free, openly licensed play-by-play, with the data, every step and an honest test in the open. First: win probability for any game state since 1908.">
+<link rel="icon" href="assets/whiff-site-icon.png">
+<link rel="preload" href="assets/fonts/archivo-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/lab.css?v=2cb74a474c">
+<script>document.documentElement.classList.add("is-js")</script>
+</head>
+<body>
+<header class="lab-header"><div class="wrap lab-header__row">
+<a class="lab-brand" href="./"><img src="assets/whiff-logo-chalk.png" alt="" width="70" height="30"><span>Whiff Lab</span></a>
+<nav class="lab-nav" aria-label="Main">
+<button class="lab-nav__open" type="button" aria-expanded="false" aria-controls="lab-menu" aria-label="Open menu"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7.5h16M4 12h16M4 16.5h16" stroke="currentColor" stroke-width="1.8" fill="none"/></svg></button>
+<div class="lab-nav__panel" id="lab-menu">
+<button class="lab-nav__close" type="button" aria-label="Close menu"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" fill="none"/></svg></button>
+<ul><li><a href="odds/">What are the odds?</a></li><li><a href="notes/">Lab notes</a></li><li><a href="https://thedailywhiff.com/">The Daily Whiff</a></li></ul>
+</div>
+</nav>
+</div></header>
+<div class="lab-seam"></div>
+<main class="wrap">
+<section class="lab-home__intro">
+<div>
+<p class="lab-kicker">Whiff Lab</p>
+<h1 class="lab-display">Baseball's numbers, worked out in the open</h1>
+</div>
+<ul class="lab-facts">
+<li><strong>Data</strong> Retrosheet play-by-play, 1908–2025, free and open</li>
+<li><strong>Method</strong> every model tested on seasons it never saw</li>
+<li><strong>Open</strong> the code, the tables and the notes on GitHub</li>
+</ul>
+</section>
+<p class="lab-intro">Whiff Lab builds baseball models from free, openly licensed data and shows all of its work: where the data comes from, each step from the plainest model to the strongest, the test that compares them, and what the numbers say that you won't find elsewhere.</p>
+
+<p class="lab-label">Experiments</p>
+<article class="lab-card">
+<p class="lab-kicker">Experiment 1 · Win probability</p>
+<h2 class="lab-card__title"><a href="odds/">What are the odds?</a></h2>
+<p class="lab-card__text">Any moment of any game since 1908: the home team's chance to win, how sure that number is, how many real games reached the same spot, and the latest of them. Learned from 15,211,482 plate appearances.</p>
+<ul class="lab-card__finds">
+<li>The longest odds ever overcome: Chicago (NL) on June 29, 1952, down 8–2, top of the 9th, two outs, bases empty. About 1 in 14,000.</li>
+<li>Comebacks rise and fall with scoring: across 118 seasons the two move together (correlation 0.76).</li>
+<li>Since the runner on second, the home team's edge in extra innings has shrunk from 52.4% to 50.0%.</li>
+<li>A table of nine thousand game states is hard to beat. Smoothing helps where it is thin, and a formula wins when the rules change.</li>
+</ul>
+<p><a class="lab-more" href="odds/">Open the experiment</a></p>
+</article>
+
+<p class="lab-label">How the lab works</p>
+<div class="lab-sec" style="margin-top:0">
+<p>The data is Retrosheet's: every play of 199,897 AL and NL games, typed in by volunteers from scorebooks and newspapers, free for any use with its notice. The lab replays each game and checks that it ends on the official final score (all of them do). The models are built one step at a time, and each step is explained in a <a href="notes/">lab note</a> in plain words, with what it gains over the last one on a test it never saw.</p>
+<p>Everything reruns by itself once a year, after Retrosheet publishes the new season: free tools on a public repository, nothing to pay for and no account. The code and the tables are on <a href="https://github.com/Jankozeluh/whiff-lab">GitHub</a>.</p>
+</div>
+
+</main>
+<footer class="lab-footer"><div class="wrap">
+<div class="lab-footer__cols">
+<div><img src="assets/whiff-logo-chalk.png" alt="Whiff Lab" width="60" height="26">
+<p class="lab-footer__tagline">Open baseball models from free play-by-play, with the data, the steps and the tests in the open.</p></div>
+<div><p class="lab-footer__label">Lab</p><ul class="lab-footer__links">
+<li><a href="odds/">What are the odds?</a></li><li><a href="notes/">Lab notes</a></li>
+<li><a href="https://github.com/Jankozeluh/whiff-lab">Code and data on GitHub</a></li></ul></div>
+<div><p class="lab-footer__label">Read</p><ul class="lab-footer__links">
+<li><a href="https://thedailywhiff.com/">The Daily Whiff</a></li>
+<li><a href="https://thedailywhiff.com/the-whiff/">The Whiff, a daily puzzle</a></li></ul></div>
+</div>
+<div class="lab-legal">
+<p>Whiff Lab, an independent fan project, not affiliated with Major League Baseball or its clubs · Data: Retrosheet's
+official releases (through the Chadwick Baseball Bureau's mirror) · The information used here was obtained free of charge from and is copyrighted by Retrosheet.  Interested parties may contact Retrosheet at &quot;www.retrosheet.org&quot;. · Typeface:
+Archivo, SIL Open Font License.</p>
+</div>
+</div></footer>
+<script src="assets/lab.js?v=5cbb02883b" defer></script>
+</body>
+</html>

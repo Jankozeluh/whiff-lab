@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en" data-data="../data/">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>From scorebooks to fifteen million game states · Whiff Lab notes</title>
+<meta name="description" content="Every model in this lab starts from one question: at this moment of a game, how often did the home team go on to win? To answer it we need the moment, for every plate appearance of every game we can get. This note is about getting it right.">
+<link rel="icon" href="../assets/whiff-site-icon.png">
+<link rel="preload" href="../assets/fonts/archivo-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../assets/lab.css?v=2cb74a474c">
+<script>document.documentElement.classList.add("is-js")</script>
+</head>
+<body>
+<header class="lab-header"><div class="wrap lab-header__row">
+<a class="lab-brand" href="../"><img src="../assets/whiff-logo-chalk.png" alt="" width="70" height="30"><span>Whiff Lab</span></a>
+<nav class="lab-nav" aria-label="Main">
+<button class="lab-nav__open" type="button" aria-expanded="false" aria-controls="lab-menu" aria-label="Open menu"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7.5h16M4 12h16M4 16.5h16" stroke="currentColor" stroke-width="1.8" fill="none"/></svg></button>
+<div class="lab-nav__panel" id="lab-menu">
+<button class="lab-nav__close" type="button" aria-label="Close menu"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" fill="none"/></svg></button>
+<ul><li><a href="../odds/">What are the odds?</a></li><li><a href="../notes/" aria-current="page">Lab notes</a></li><li><a href="https://thedailywhiff.com/">The Daily Whiff</a></li></ul>
+</div>
+</nav>
+</div></header>
+<div class="lab-seam"></div>
+<main class="wrap">
+<p class="lab-kicker">Lab note 1 of 6 · What are the odds?</p>
+<h1 class="lab-title">From scorebooks to fifteen million game states</h1>
+<div class="lab-prose">
+<p>Every model in this lab starts from one question: at this moment of a game, how often did the home team go on to win? To answer it we need the moment, for every plate appearance of every game we can get. This note is about getting it right.</p>
+<h2>Where the data comes from</h2>
+<p><a href="https://www.retrosheet.org">Retrosheet</a> is a volunteer project that has typed in the play-by-play of almost every major-league game, from scorebooks, newspapers and club records. It is free for any use as long as its notice comes along:</p>
+<blockquote>
+<p>The information used here was obtained free of charge from and is copyrighted by Retrosheet.  Interested parties may contact Retrosheet at "www.retrosheet.org".</p>
+</blockquote>
+<p>The lab reads Retrosheet's official releases from the <a href="https://github.com/chadwickbureau/retrosheet">Chadwick Baseball Bureau's mirror on GitHub</a> (branch <code>official</code>, an exact copy of each release). It fetches only the files it needs (the regular-season event files and the game logs), keeps them in <code>data/raw/</code>, and on a rebuild asks only for what changed.</p>
+<p><img loading="lazy" alt="Games per season: all AL and NL games, and the games the lab uses" src="figures/coverage.svg" /></p>
+<p>The lab uses 197,645 of the 202,654 AL and NL games decided from 1908 to 2025 (97.5%): Retrosheet has the play-by-play of nearly all of them, and the rest are left out for the reasons below. Before 1908 its regular-season files are box scores only, so the lab starts there.</p>
+<h2>What an event file says</h2>
+<p>An event file is one line per record. A game starts with <code>id</code> and <code>info</code> lines, the lineups (<code>start</code>, <code>sub</code>), and then one <code>play</code> line per event:</p>
+<pre><code>play,9,1,smitj001,32,BCFBX,S8/G.2-H;1-3
+</code></pre>
+<p>Ninth inning, bottom (<code>1</code>: the home team bats), the batter, the count, the pitches, and the event: a single to centre field on a ground ball (<code>S8/G</code>), the runner from second scores (<code>2-H</code>), the runner from first goes to third (<code>1-3</code>). There are a few dozen kinds of event (hits, walks, outs with the fielders who made them, steals, wild pitches, errors) and a small grammar for where each runner went.</p>
+<h2>The parser</h2>
+<p>The parser (<code>src/whiff_lab/retrosheet.py</code>) replays each game play by play. It keeps three things: which bases are taken, how many are out, and the score. Each time a new batter steps in, it writes down the state. It doesn't need to know who the runners are, only where they are.</p>
+<p>Most of the notation says exactly where everyone went. A few rules are implied, and they are where a parser goes wrong:</p>
+<ul>
+<li><strong>A walk forces runners along.</strong> <code>W</code> with runners on first and second puts them on second and third without saying so.</li>
+<li><strong>A home run clears the bases</strong>, named or not.</li>
+<li><strong>An out on the bases can be undone by an error.</strong> <code>1X3(5E4)</code>: the runner from first was thrown out at third, except the throw was dropped (<code>E4</code>), so he is safe. But <code>2XH(96421)(E1/TH)</code> has an error <em>and</em> a clean putout: the error let another runner move up, and the runner at home is still out. The first version of the parser got this wrong, and the check below found it.</li>
+<li><strong>Since 2020, extra innings start with a runner on second.</strong> Retrosheet writes this as a <code>radj</code> record before the inning.</li>
+</ul>
+<h2>The check: every game must end on its final score</h2>
+<p>A replay that loses a runner or an out will, sooner or later, score a run that didn't happen. So every replayed game is compared with Retrosheet's game logs, which record each game's final score separately. Of the 199,897 games parsed, <strong>100.00% end on the game log's score</strong>. That doesn't prove every state in between is right, but a mistake would have to cancel itself out before the end of the game to slip through.</p>
+<p>The tests (<code>tests/test_retrosheet.py</code>) pin down three dozen events, a whole made-up game with the extra-inning runner, and (when the data is there) a full season.</p>
+<h2>What is left out</h2>
+<ul>
+<li>Games scheduled for seven innings (the doubleheaders of 2020 and 2021).</li>
+<li>Games stopped before the ninth inning. A rain-shortened game ends on the weather, not on the baseball: the leader wins without having to get the last outs, and a model that learned from it would think leads are safer than they are.</li>
+<li>Ties, because nobody won.</li>
+</ul>
+<p>That leaves <strong>197,645 games and 15,211,482 plate appearances</strong>.</p>
+<h2>A game state</h2>
+<p>A state is what a scoreboard shows as the batter steps in:</p>
+<table>
+<thead>
+<tr>
+<th>Part</th>
+<th>Values</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Inning</td>
+<td>1 to 9, and 10 for every extra inning (they all play alike: sudden death for the home team)</td>
+</tr>
+<tr>
+<td>Half</td>
+<td>top (visitors bat) or bottom (home team bats)</td>
+</tr>
+<tr>
+<td>Outs</td>
+<td>0, 1, 2</td>
+</tr>
+<tr>
+<td>Runners</td>
+<td>8 combinations, from bases empty to bases loaded</td>
+</tr>
+<tr>
+<td>Score</td>
+<td>home runs minus visitors' runs, from -10 to +10 (bigger leads count as 10)</td>
+</tr>
+</tbody>
+</table>
+<p>That is 10,080 possible states. 9,005 of them came up at least once.</p>
+<p>One last trick makes everything fast. The models never look at the plate appearances one by one: they read a table with one row per state and season, saying how many times the state came up (<code>n</code>) and how many of those games the home team won (<code>w</code>). Fitting a model to these counts gives exactly the same answer as fitting it to the fifteen million rows, in seconds.</p>
+<p><strong>Next:</strong> <a href="02-the-table.html">Step 1: just count</a>.</p>
+</div>
+<nav class="lab-notes-nav" aria-label="Lab notes"><span></span><a href="02-the-table.html">Step 1: just count →</a></nav>
+</main>
+<footer class="lab-footer"><div class="wrap">
+<div class="lab-footer__cols">
+<div><img src="../assets/whiff-logo-chalk.png" alt="Whiff Lab" width="60" height="26">
+<p class="lab-footer__tagline">Open baseball models from free play-by-play, with the data, the steps and the tests in the open.</p></div>
+<div><p class="lab-footer__label">Lab</p><ul class="lab-footer__links">
+<li><a href="../odds/">What are the odds?</a></li><li><a href="../notes/">Lab notes</a></li>
+<li><a href="https://github.com/Jankozeluh/whiff-lab">Code and data on GitHub</a></li></ul></div>
+<div><p class="lab-footer__label">Read</p><ul class="lab-footer__links">
+<li><a href="https://thedailywhiff.com/">The Daily Whiff</a></li>
+<li><a href="https://thedailywhiff.com/the-whiff/">The Whiff, a daily puzzle</a></li></ul></div>
+</div>
+<div class="lab-legal">
+<p>Whiff Lab, an independent fan project, not affiliated with Major League Baseball or its clubs · Data: Retrosheet's
+official releases (through the Chadwick Baseball Bureau's mirror) · The information used here was obtained free of charge from and is copyrighted by Retrosheet.  Interested parties may contact Retrosheet at &quot;www.retrosheet.org&quot;. · Typeface:
+Archivo, SIL Open Font License.</p>
+</div>
+</div></footer>
+<script src="../assets/lab.js?v=5cbb02883b" defer></script>
+</body>
+</html>

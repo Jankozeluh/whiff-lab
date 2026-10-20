@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en" data-data="../data/">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Step 2: borrow strength (empirical Bayes) · Whiff Lab notes</title>
+<meta name="description" content="A state seen four times tells us something, just not much. The fix is not to throw its record away but to mix it with something steadier: a related state with far more games behind it. This is shrinkage, and choosing how much to shrink from the data itself is called empirical Bayes.">
+<link rel="icon" href="../assets/whiff-site-icon.png">
+<link rel="preload" href="../assets/fonts/archivo-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../assets/lab.css?v=2cb74a474c">
+<script>document.documentElement.classList.add("is-js")</script>
+</head>
+<body>
+<header class="lab-header"><div class="wrap lab-header__row">
+<a class="lab-brand" href="../"><img src="../assets/whiff-logo-chalk.png" alt="" width="70" height="30"><span>Whiff Lab</span></a>
+<nav class="lab-nav" aria-label="Main">
+<button class="lab-nav__open" type="button" aria-expanded="false" aria-controls="lab-menu" aria-label="Open menu"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7.5h16M4 12h16M4 16.5h16" stroke="currentColor" stroke-width="1.8" fill="none"/></svg></button>
+<div class="lab-nav__panel" id="lab-menu">
+<button class="lab-nav__close" type="button" aria-label="Close menu"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" fill="none"/></svg></button>
+<ul><li><a href="../odds/">What are the odds?</a></li><li><a href="../notes/" aria-current="page">Lab notes</a></li><li><a href="https://thedailywhiff.com/">The Daily Whiff</a></li></ul>
+</div>
+</nav>
+</div></header>
+<div class="lab-seam"></div>
+<main class="wrap">
+<p class="lab-kicker">Lab note 3 of 6 · What are the odds?</p>
+<h1 class="lab-title">Step 2: borrow strength (empirical Bayes)</h1>
+<div class="lab-prose">
+<p>A state seen four times tells us something, just not much. The fix is not to throw its record away but to mix it with something steadier: a related state with far more games behind it. This is shrinkage, and choosing how much to shrink from the data itself is called empirical Bayes.</p>
+<h2>The idea</h2>
+<p>Take the state "top of the 8th, two outs, runners on second and third, home team up 4". Its own record is thin. Its <em>parent</em>, the same inning, half, outs and score with any runners, has hundreds of times more games. Runners matter, so the parent is not the right answer either; but it is a good starting guess.</p>
+<p>Mix the two:</p>
+<pre><code>shrunk rate = (w + k · m) / (n + k)
+</code></pre>
+<p><code>w</code> home wins in <code>n</code> games from the state, <code>m</code> the parent's rate, and <code>k</code> a strength: the parent counts like <code>k</code> extra games. A state with <code>n</code> much bigger than <code>k</code> keeps its own record; a state with <code>n</code> much smaller than <code>k</code> takes its parent's.</p>
+<h2>Choosing k from the data</h2>
+<p>If <code>k</code> is too small, rare states stay noisy; too big, and real differences between states get washed out. Empirical Bayes picks <code>k</code> by asking which value makes the records we actually saw most likely.</p>
+<p>Suppose each state's true rate is drawn from a Beta distribution centred on its parent's rate, with strength <code>k</code>, and its record is a binomial draw from that true rate. Then each state's record has a known probability for every <code>k</code> (the beta-binomial distribution). Multiply over all states, and pick the <code>k</code> with the highest product. No test data is used: the spread of the states' records around their parents is what tells us how much they really differ.</p>
+<h2>A ladder of parents</h2>
+<p>The lab shrinks in four levels, each toward the one above it:</p>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>Groups states by</th>
+<th>Fitted k</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>half, score</td>
+<td>0.7</td>
+</tr>
+<tr>
+<td>2</td>
+<td>inning, half, score</td>
+<td>35.9</td>
+</tr>
+<tr>
+<td>3</td>
+<td>inning, half, outs, score</td>
+<td>465.7</td>
+</tr>
+<tr>
+<td>4</td>
+<td>the full state (with runners)</td>
+<td>59.8</td>
+</tr>
+</tbody>
+</table>
+<p>The numbers are telling. At level 3 <code>k</code> is large: once you know the inning, half and score, knowing the outs moves the odds only a little, so a level-3 group needs hundreds of games before its own record wins out. At level 4 it is about 60: runners matter more, and a full state's own record takes over after a few dozen games.</p>
+<p><img loading="lazy" alt="Rare states, before and after shrinking" src="figures/shrinkage.svg" /></p>
+<p>Each dot is a state seen fewer than 300 times in training. On the dashed line, shrinking changed nothing. The orange dots (seen once or a few times) are pulled hard toward their parent's rate: a record of 0% or 100% from a game or two ends up wherever the parent state says. The dark dots (seen a hundred times or more) barely move.</p>
+<h2>Result</h2>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>Log loss, all</th>
+<th>Rare states</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Lookup table</td>
+<td>0.4671</td>
+<td>0.1526</td>
+</tr>
+<tr>
+<td>Shrunk table</td>
+<td>0.4670</td>
+<td>0.1393</td>
+</tr>
+</tbody>
+</table>
+<p>Overall the gain is a hair, but it is real: resampling the test games, the shrunk table's log loss minus the table's lies between -0.00019 and -0.00010 (95%), below zero every time. On rare states the gain is 9%. Shrinking costs nothing where data is plentiful and helps where it is thin, which is why the same idea comes back for the eras (lab note 6).</p>
+<p><strong>Next:</strong> <a href="04-logistic.html">Step 3: a formula</a>.</p>
+</div>
+<nav class="lab-notes-nav" aria-label="Lab notes"><a href="02-the-table.html">← Step 1: just count</a><a href="04-logistic.html">Step 3: a formula (logistic regression) →</a></nav>
+</main>
+<footer class="lab-footer"><div class="wrap">
+<div class="lab-footer__cols">
+<div><img src="../assets/whiff-logo-chalk.png" alt="Whiff Lab" width="60" height="26">
+<p class="lab-footer__tagline">Open baseball models from free play-by-play, with the data, the steps and the tests in the open.</p></div>
+<div><p class="lab-footer__label">Lab</p><ul class="lab-footer__links">
+<li><a href="../odds/">What are the odds?</a></li><li><a href="../notes/">Lab notes</a></li>
+<li><a href="https://github.com/Jankozeluh/whiff-lab">Code and data on GitHub</a></li></ul></div>
+<div><p class="lab-footer__label">Read</p><ul class="lab-footer__links">
+<li><a href="https://thedailywhiff.com/">The Daily Whiff</a></li>
+<li><a href="https://thedailywhiff.com/the-whiff/">The Whiff, a daily puzzle</a></li></ul></div>
+</div>
+<div class="lab-legal">
+<p>Whiff Lab, an independent fan project, not affiliated with Major League Baseball or its clubs · Data: Retrosheet's
+official releases (through the Chadwick Baseball Bureau's mirror) · The information used here was obtained free of charge from and is copyrighted by Retrosheet.  Interested parties may contact Retrosheet at &quot;www.retrosheet.org&quot;. · Typeface:
+Archivo, SIL Open Font License.</p>
+</div>
+</div></footer>
+<script src="../assets/lab.js?v=5cbb02883b" defer></script>
+</body>
+</html>

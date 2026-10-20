@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en" data-data="../data/">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>What Are the Odds? Win Probability for Any Baseball Game State Since 1908</title>
+<meta name="description" content="The home team&#x27;s chance to win from any inning, out, runner and score, in every era since 1908: learned from 15 million plate appearances, with the real games behind each number.">
+<link rel="icon" href="../assets/whiff-site-icon.png">
+<link rel="preload" href="../assets/fonts/archivo-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../assets/lab.css?v=2cb74a474c"><link rel="stylesheet" href="../assets/odds.css?v=8f56d95bc8">
+<script>document.documentElement.classList.add("is-js")</script>
+</head>
+<body>
+<header class="lab-header"><div class="wrap lab-header__row">
+<a class="lab-brand" href="../"><img src="../assets/whiff-logo-chalk.png" alt="" width="70" height="30"><span>Whiff Lab</span></a>
+<nav class="lab-nav" aria-label="Main">
+<button class="lab-nav__open" type="button" aria-expanded="false" aria-controls="lab-menu" aria-label="Open menu"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7.5h16M4 12h16M4 16.5h16" stroke="currentColor" stroke-width="1.8" fill="none"/></svg></button>
+<div class="lab-nav__panel" id="lab-menu">
+<button class="lab-nav__close" type="button" aria-label="Close menu"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" fill="none"/></svg></button>
+<ul><li><a href="../odds/" aria-current="page">What are the odds?</a></li><li><a href="../notes/">Lab notes</a></li><li><a href="https://thedailywhiff.com/">The Daily Whiff</a></li></ul>
+</div>
+</nav>
+</div></header>
+<div class="lab-seam"></div>
+<main class="wrap">
+<p class="lab-kicker">Experiment 1 · Win probability</p>
+<h1 class="lab-title">What are the odds?</h1>
+<p class="lab-intro">Pick any moment of a game: the inning, the outs, the runners, the score, the era. You get the home team's chance to win, how sure that number is, how many real games reached the same spot, and the latest of them. It is learned from 15,211,482 plate appearances of 197,645 games, 1908 to 2025.</p>
+
+<section class="odds-calc" id="odds-calc" aria-label="Win probability calculator">
+<div class="odds-spot">
+<p class="odds-mini"><span>Home team</span><b id="odds-mini-p">–</b><a href="#odds-out">details</a></p>
+<fieldset class="odds-row"><legend>Inning</legend>
+<div class="odds-btns odds-btns--inning">
+<button class="odds-btn" type="button" data-set="inning=1">1</button><button class="odds-btn" type="button" data-set="inning=2">2</button><button class="odds-btn" type="button" data-set="inning=3">3</button><button class="odds-btn" type="button" data-set="inning=4">4</button><button class="odds-btn" type="button" data-set="inning=5">5</button><button class="odds-btn" type="button" data-set="inning=6">6</button><button class="odds-btn" type="button" data-set="inning=7">7</button><button class="odds-btn" type="button" data-set="inning=8">8</button><button class="odds-btn" type="button" data-set="inning=9">9</button><button class="odds-btn" type="button" data-set="inning=10" aria-label="10th or later">10+</button>
+</div></fieldset>
+<fieldset class="odds-row"><legend>Half</legend>
+<div class="odds-btns odds-btns--2">
+<button class="odds-btn" type="button" data-set="bottom=0">Top<small>visitors bat</small></button><button class="odds-btn" type="button" data-set="bottom=1">Bottom<small>home team bats</small></button>
+</div></fieldset>
+<div class="odds-two">
+<fieldset class="odds-row"><legend>Runners <span class="odds-hint">tap a base</span></legend>
+<div class="odds-diamond">
+<button class="odds-base odds-base--2" type="button" data-base="2"><span class="screen-reader-text">Runner on second</span></button>
+<button class="odds-base odds-base--3" type="button" data-base="4"><span class="screen-reader-text">Runner on third</span></button>
+<button class="odds-base odds-base--1" type="button" data-base="1"><span class="screen-reader-text">Runner on first</span></button>
+</div></fieldset>
+<fieldset class="odds-row"><legend>Outs</legend>
+<div class="odds-btns odds-btns--3">
+<button class="odds-btn" type="button" data-set="outs=0">0</button><button class="odds-btn" type="button" data-set="outs=1">1</button><button class="odds-btn" type="button" data-set="outs=2">2</button>
+</div></fieldset>
+</div>
+<fieldset class="odds-row"><legend>Score</legend>
+<div class="odds-score">
+<div class="odds-step"><span>Visitors</span><button type="button" data-step="away:-1" aria-label="Visitors one run fewer">−</button><output id="odds-away" aria-live="polite">3</output><button type="button" data-step="away:1" aria-label="Visitors one run more">+</button></div>
+<div class="odds-step"><span>Home</span><button type="button" data-step="home:-1" aria-label="Home team one run fewer">−</button><output id="odds-home" aria-live="polite">2</output><button type="button" data-step="home:1" aria-label="Home team one run more">+</button></div>
+</div></fieldset>
+<div class="odds-row"><label class="odds-legend" for="odds-era">Era</label>
+<select class="odds-select" id="odds-era"><option value="runner">Runner on second, 2020–2025</option></select></div>
+</div>
+
+<div class="odds-out" id="odds-out" aria-live="polite">
+<p class="lab-kicker">The home team's chance to win</p>
+<p class="odds-sit" id="odds-sit">Bottom of the 9th, no outs, bases empty, home team trails 3–2</p>
+<p class="odds-big"><strong id="odds-home-p">–</strong><span>Visitors <b id="odds-away-p">–</b></span></p>
+<div class="odds-bar" id="odds-bar" aria-hidden="true"></div>
+<dl class="odds-facts">
+<div><dt>90% interval</dt><dd id="odds-range">–</dd></div>
+<div><dt>Games from here, this era</dt><dd id="odds-n">–</dd></div>
+<div><dt>Home team won</dt><dd id="odds-w">–</dd></div>
+</dl>
+<div class="odds-notes" id="odds-notes"></div>
+<div id="odds-games-wrap" hidden><h3>Real games from this spot</h3><ul class="odds-games" id="odds-games"></ul></div>
+<p class="odds-era-note" id="odds-era-note"></p>
+</div>
+</section>
+
+<section class="lab-sec" aria-labelledby="strip-h">
+<h2 id="strip-h">The same spot in every era</h2>
+<p class="lab-lede">Your spot, era by era: each dot is that era's odds, each line its 90% interval. An era with few games from this spot leans on the model and stays close to the others; an era with many shows its own record.</p>
+<ol class="odds-strip" id="odds-strip"></ol>
+<p class="lab-note" id="odds-strip-axis"></p>
+</section>
+
+<ul class="lab-jump" aria-label="Findings">
+<li><a href="#eras">A century of odds</a></li><li><a href="#comebacks">Greatest comebacks</a></li><li><a href="#follow">Comebacks follow runs</a></li><li><a href="#home">Home field</a></li><li><a href="#runner">Runner on second</a></li><li><a href="#models">Four models, one test</a></li><li><a href="#method">How it was made</a></li>
+</ul>
+
+<section class="lab-sec" id="eras">
+<h2>A century of odds: what changed, and what didn't</h2>
+<p>Scoring has swung from 3.40 runs per team per game (1908) to 5.58 (1930), and you would expect a lead to be worth much more when runs are scarce. Mostly, it isn't. The same spot gives nearly the same odds in every era: a two-run lead or a bases-loaded jam is worth about what it was worth a hundred years ago. Where eras do differ, the gaps are a few points, and they follow the runs. A home team down a run in the bottom of the 9th came back 15.4% of the time in the dead-ball era and 20.3% in the live-ball years that followed.</p>
+<div class="lab-table"><table><thead><tr id="spots-head"><th>Spot</th></tr></thead><tbody id="spots-body"><tr><td>Loading…</td></tr></tbody></table></div>
+<p class="lab-note">The home team's chance to win from each spot, by era (hover a number for its 90% interval and the games behind it). Each era's own record, combined with the model fitted on all eras by empirical Bayes. A test backs this up: leaving one era out and predicting it from the others, telling the model the era's scoring level did not help (<a href="../notes/06-eras.html">lab note 6</a>).</p>
+</section>
+
+<section class="lab-sec" id="comebacks">
+<h2>The greatest comebacks since 1908</h2>
+<p>For every game, the lowest chance the eventual winner had before any plate appearance, by the final model. 8.1% of all games were won by a team that was below 10% at some point, 0.43% by a team below 1%, and 35 games in 118 seasons by a team below 1 in 1,000. The longest odds of all: Chicago (NL), down 8–2, top of the 9th, two outs, bases empty, on June 29, 1952. They won 9–8.</p>
+<div class="lab-table"><table><thead><tr><th class="num">#</th><th>Date</th><th>Game, and the winner's low point</th><th class="num">Odds then</th><th>Retrosheet</th></tr></thead><tbody id="comebacks-body"><tr><td colspan="5">Loading…</td></tr></tbody></table></div>
+<p class="lab-note">Odds beyond 1 in 1,000 are the model's reach past the data: below that point there are too few comebacks to check them one by one, though in total they match (lab note 5). Box scores open on Retrosheet.</p>
+</section>
+
+<section class="lab-sec" id="follow">
+<h2>Comebacks follow the runs</h2>
+<p>Put two things side by side that are rarely shown together: how often a game is won from far behind, and how many runs a season scores. Across 118 seasons they rise and fall together (correlation 0.76). The live-ball 1920s and 1930s were the golden age of the comeback (10.8% of games in 1930, the top scoring season); the dead-ball years and 1968, the year of the pitcher, its lows (5.0% in 1908, 6.2% in 1968).</p>
+<figure class="lab-ch" data-chart="comebacks"><p class="lab-note">Loading the chart…</p></figure>
+<p class="lab-note">Top: share of games won by a team that fell below a 10% chance at some point. Bottom: runs per team per game. One point per season, games with play-by-play only.</p>
+</section>
+
+<section class="lab-sec" id="home">
+<h2>Home field: about 54%, and where it lives</h2>
+<p>The home team wins about 54% of the time, and has for 125 seasons. Single seasons wander, from 50.6% in 1917 to 58.2% in 1931, but no decade has averaged below 53.5% or above 55.5%. In 2020, with no fans in the stands, the home team won 55.7%, more than in 2019 (52.9%) or 2021 (53.9%): whatever the edge is, it is not just the crowd (a 60-game season is a small sample, and a few teams played their home games elsewhere).</p>
+<figure class="lab-ch" data-chart="homefield"><p class="lab-note">Loading the chart…</p></figure>
+<p class="lab-note">The home team's share of wins in every AL and NL season since 1901 (dots), with a running 11-season average (line). Every game in Retrosheet's game logs, ties left out.</p>
+<p>Where does the edge come from? In a tie game, the home team's chance at the start of the top of an inning slides from 54.1% in the 1st to 50.1% in the 6th: home teams build their edge over the game by outscoring their visitors a little. Late in the game the last at-bat takes over: in a tie in the bottom of the 9th the home team wins 66.8%.</p>
+<figure class="lab-ch" data-chart="ties"><p class="lab-note">Loading the chart…</p></figure>
+</section>
+
+<section class="lab-sec" id="runner">
+<h2>The runner on second</h2>
+<p>Since 2020 every regular-season extra half-inning starts with a runner on second. It did what it was meant to do: 71% of extra-inning games now end in the 10th, against 44% before, and the longest has gone 16 innings (before: 25). It also moved the odds. A tie at the start of the 10th was a 52.3% chance for the home team; with the visitors' free runner on second it is 49.4%. A home team starting the bottom of the 10th tied, with its own runner on second, wins 84.1% (with the bases empty it was 66.5%).</p>
+<p>And the home team's edge in extra innings may be gone: it won 52.4% of extra-inning games from 1908 to 2019, and 50.0% of 1,125 since (90% interval 47.5% to 52.4%). One reading: batting last was worth something because the home team knew what it needed; now the visitors start with a runner and often score first, and the home team has to answer from behind.</p>
+</section>
+
+<section class="lab-sec" id="models">
+<h2>Four models, one honest test</h2>
+<p>Each model was fitted on 1908-2016 and scored on the 20,056 games of 2017-2025, which it never saw. The score is the log loss: the average surprise per plate appearance, lower is better (a coin flip scores 0.693). Intervals come from resampling whole games.</p>
+<div class="lab-table"><table>
+<thead><tr><th>Model</th><th class="num">Log loss</th><th class="num">Brier</th><th class="num">Rare spots</th><th class="num">Extra innings since 2020</th></tr></thead>
+<tbody>
+<tr><th>0. The home team's share only</th><td class="num">0.6925</td><td class="num">0.2497</td><td class="num">0.7037</td><td class="num">0.7010</td></tr>
+<tr><th>1. Lookup table</th><td class="num">0.4671</td><td class="num">0.1569</td><td class="num">0.1526</td><td class="num">0.5739</td></tr>
+<tr><th>2. Shrunk table (empirical Bayes)</th><td class="num">0.4670</td><td class="num">0.1569</td><td class="num">0.1393</td><td class="num">0.5695</td></tr>
+<tr><th>3. Logistic regression</th><td class="num">0.4683</td><td class="num">0.1572</td><td class="num">0.1371</td><td class="num">0.5503</td></tr>
+<tr><th>4. Gradient boosting</th><td class="num">0.4672</td><td class="num">0.1570</td><td class="num">0.1404</td><td class="num">0.5711</td></tr>
+</tbody></table></div>
+<p class="lab-note">Rare spots: states seen fewer than 100 times in training (0.8% of test plate appearances). Extra innings since 2020: 0.8%.</p>
+<ul>
+<li><strong>The table does almost all the work.</strong> Knowing the state cuts the surprise by 33% against knowing nothing but home field. With nine thousand states and fifteen million plate appearances, the plain record is very hard to beat on average.</li>
+<li><strong>Shrinking helps where data is thin.</strong> Empirical Bayes beats the table by a hair overall (the whole interval of the gain is above zero) and by 9% on rare spots, where the table says 0% or 100% from a handful of games.</li>
+<li><strong>A formula wins when the rules change.</strong> The logistic regression, six numbers on top of a little baseball logic, is a touch worse on average but the best on rare spots, and by far the best in the extra innings since 2020: its formula knows what a runner on second is worth, while the other models had never seen the rule.</li>
+<li><strong>The trees learn the new rule fast.</strong> Given three seasons of it (fitted on 1908–2022), gradient boosting is the best in the extra innings of 2023 on, 5% better than the table. That is the final model behind the calculator, fitted on every season.</li>
+</ul>
+</section>
+
+<section class="lab-sec" id="method">
+<h2>How it was made</h2>
+<p>Retrosheet's event files list every play of 199,897 regular-season AL and NL games from 1908 to 2025. The lab's parser replays each game, keeps the runners, the outs and the score, and writes down the state as each batter steps in. Every one of those games ends on the final score in Retrosheet's game logs (100.0%), so every state in between is right. Games scheduled for seven innings, games stopped before the ninth, and ties are left out: 197,645 games remain. The whole pipeline reruns by itself once a year, after Retrosheet's December release.</p>
+<p><a class="lab-more" href="../notes/">Read the lab notes</a>: the data, then each model in plain words, the test, and the eras.</p>
+</section>
+
+<p class="lab-credit">Data: Retrosheet's official releases, through the Chadwick Baseball Bureau's mirror on GitHub. The information used here was obtained free of charge from and is copyrighted by Retrosheet.  Interested parties may contact Retrosheet at "www.retrosheet.org". Each era's odds combine its own record with the model; the 90% intervals say how sure that combination is. Independent fan project, not affiliated with MLB.</p>
+
+</main>
+<footer class="lab-footer"><div class="wrap">
+<div class="lab-footer__cols">
+<div><img src="../assets/whiff-logo-chalk.png" alt="Whiff Lab" width="60" height="26">
+<p class="lab-footer__tagline">Open baseball models from free play-by-play, with the data, the steps and the tests in the open.</p></div>
+<div><p class="lab-footer__label">Lab</p><ul class="lab-footer__links">
+<li><a href="../odds/">What are the odds?</a></li><li><a href="../notes/">Lab notes</a></li>
+<li><a href="https://github.com/Jankozeluh/whiff-lab">Code and data on GitHub</a></li></ul></div>
+<div><p class="lab-footer__label">Read</p><ul class="lab-footer__links">
+<li><a href="https://thedailywhiff.com/">The Daily Whiff</a></li>
+<li><a href="https://thedailywhiff.com/the-whiff/">The Whiff, a daily puzzle</a></li></ul></div>
+</div>
+<div class="lab-legal">
+<p>Whiff Lab, an independent fan project, not affiliated with Major League Baseball or its clubs · Data: Retrosheet's
+official releases (through the Chadwick Baseball Bureau's mirror) · The information used here was obtained free of charge from and is copyrighted by Retrosheet.  Interested parties may contact Retrosheet at &quot;www.retrosheet.org&quot;. · Typeface:
+Archivo, SIL Open Font License.</p>
+</div>
+</div></footer>
+<script src="../assets/lab.js?v=5cbb02883b" defer></script><script src="../assets/odds.js?v=7dd7d06935" defer></script>
+</body>
+</html>
