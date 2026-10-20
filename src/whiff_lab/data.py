@@ -62,11 +62,12 @@ def fetch() -> str:
     return git("rev-parse", "HEAD")
 
 
-def record_source(commit: str) -> None:
-    """Write down which release the results come from (the rebuild compares it with the mirror's)."""
+def record_source(**sources: str) -> None:
+    """Write down which releases the results come from (the rebuild compares them with the latest ones)."""
     path = ROOT / "results" / "source.json"
     path.parent.mkdir(exist_ok=True)
-    path.write_text(json.dumps({"mirror": MIRROR, "branch": BRANCH, "commit": commit}, indent=1) + "\n")
+    known = json.loads(path.read_text()) if path.exists() else {"mirror": MIRROR, "branch": BRANCH}
+    path.write_text(json.dumps({**known, **sources}, indent=1) + "\n")
 
 
 def seasons() -> list[int]:

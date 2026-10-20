@@ -33,7 +33,7 @@ from whiff_lab.data import ROOT, WORK
 from whiff_lab.models import fit_prior_strength
 
 RAW = ROOT / "data" / "raw" / "lahman"
-TABLES = ("People", "Batting", "Pitching", "Appearances", "AllstarFull", "AwardsSharePlayers")
+TABLES = ("People", "Batting", "Pitching", "Appearances", "AllstarFull", "AwardsSharePlayers", "Teams")
 CRAN = "https://cran.r-project.org/src/contrib/"
 FIRST, TRAIN_LAST, TEST_LAST = 1932, 1994, 2016
 WINDOW, STAR = 9, 2  # a star: 2+ All-Star teams in the 9 seasons after the rookie season
@@ -127,7 +127,7 @@ def rookies(t: dict[str, pd.DataFrame]) -> pd.DataFrame:
 
     r = r.merge(app, on=["playerID", "yearID"], how="left")
     people = t["People"][
-        ["playerID", "birthYear", "birthMonth", "nameFirst", "nameLast", "retroID", "bbrefID"]
+        ["playerID", "birthYear", "birthMonth", "birthCountry", "nameFirst", "nameLast", "retroID", "bbrefID"]
     ]
     r = r.merge(people, on="playerID", how="left")
     r["age"] = r.yearID - r.birthYear - (r.birthMonth.fillna(1) >= 7)  # age on June 30, the usual convention
@@ -163,6 +163,24 @@ def rookies(t: dict[str, pd.DataFrame]) -> pd.DataFrame:
     r["p_bb_rate"], r["p_lg_bb"] = r.p_BB / bf, P.p_BB / lbf
     r["p_hr_rate"], r["p_lg_hr"] = r.p_HR / bf, P.p_HR / lbf
     r["starter"] = r.p_GS / r.p_G.clip(lower=1)
+    # FIP's constant: the league's ERA minus its FIP before the constant, so the two share a scale
+    r["lg_era"] = 27 * P.p_ER / P.p_IPouts
+    r["fip_const"] = r.lg_era - (13 * P.p_HR + 3 * (P.p_BB + P.p_HBP) - 2 * P.p_SO) / (P.p_IPouts / 3)
+
+    # his team: the one he played the most games for that season
+    stints = pd.concat(
+        [
+            t["Batting"][["playerID", "yearID", "teamID", "G"]],
+            t["Pitching"][["playerID", "yearID", "teamID", "G"]],
+        ]
+    )
+    main = stints.sort_values("G").drop_duplicates(["playerID", "yearID"], keep="last")
+    names = t["Teams"][["yearID", "teamID", "name"]].rename(columns={"name": "team"})
+    r = r.merge(
+        main[["playerID", "yearID", "teamID"]].merge(names, on=["yearID", "teamID"], how="left"),
+        on=["playerID", "yearID"],
+        how="left",
+    )
 
     # what came after: All-Star teams in the next nine seasons (a season with two All-Star games counts once)
     stars = t["AllstarFull"].drop_duplicates(["playerID", "yearID"])[["playerID", "yearID"]]
@@ -271,6 +289,26 @@ def top_k(df: pd.DataFrame, score: np.ndarray, k: int = 5) -> dict:
         "hit_rate": float(picked.star.mean()),
         "share_of_stars": float(picked.star.sum() / df.star.sum()),
     }
+
+
+def calibration(p: np.ndarray, y: np.ndarray) -> list[dict]:
+    """The test rookies grouped by the chance the model gave them: what it said, and what happened. Every
+    group is listed, an empty one too, so hitters' and pitchers' groups line up."""
+    out = []
+    for lo, hi in ((0, 0.05), (0.05, 0.1), (0.1, 0.2), (0.2, 0.35), (0.35, 0.5), (0.5, 1.01)):
+        m = (p >= lo) & (p < hi)
+        n = int(m.sum())
+        out.append(
+            {
+                "from": lo,
+                "to": min(hi, 1.0),
+                "rookies": n,
+                "stars": int(y[m].sum()),
+                "said": float(p[m].mean()) if n else None,
+                "happened": float(y[m].mean()) if n else None,
+            }
+        )
+    return out
 
 
 def bootstrap_gap(y, p_model, p_base, reps: int = 2000, seed: int = 0) -> list[float]:
@@ -391,6 +429,7 @@ def test(r: pd.DataFrame | None = None) -> dict:
         res["gap_model_vs_age_and_card_95"] = bootstrap_gap(
             yt, preds["Model (logistic)"], preds["Age and the back of the card"]
         )
+        res["calibration"] = calibration(preds["Model (logistic)"], yt)
         lr = fits["Model (logistic)"][-1]
         res["coefficients"] = dict(zip(X.columns, map(float, lr.coef_[0]), strict=True))
         out[kind] = res
@@ -465,3 +504,184 @@ def test_pitches(r: pd.DataFrame, counts: pd.DataFrame) -> dict:
         )
         out[kind] = res
     return out
+
+
+CLASSES = 2  # the latest rookie classes the report shows
+ABROAD = {"Japan", "South Korea", "Taiwan"}  # where players often come from as grown pros
+COMPARABLES = 5
+
+
+def _luck(d: pd.DataFrame, kind: str, ks: dict) -> tuple[pd.Series, pd.Series]:
+    """What his rookie line would have been with his skills and average luck: (actual, expected)."""
+    if kind == "hitter":
+        k = ks["babip"]
+        babip = (d.H - d.HR + k * d.lg_babip) / (d.bip + k)
+        return d.avg, (d.HR + babip * d.bip) / d.AB.clip(lower=1)
+    bf = d.p_BFP.clip(lower=1)
+    rate = {
+        name: (d[f"p_{col}"] + ks[name] * d[f"p_lg_{name}"]) / (bf + ks[name])
+        for name, col in (("k", "SO"), ("bb", "BB"), ("hr", "HR"))
+    }
+    ip = (d.p_IPouts / 3).clip(lower=1)
+    xera = (13 * rate["hr"] * bf + 3 * (rate["bb"] * bf + d.p_HBP) - 2 * rate["k"] * bf) / ip + d.fip_const
+    return d.era, xera
+
+
+def _text(v) -> str | None:
+    return None if pd.isna(v) else str(v)
+
+
+def _line(row, kind: str) -> dict:
+    if kind == "hitter":
+        return {
+            "pa": int(row.pa),
+            "avg": round(row.avg, 3),
+            "obp": round(row.obp, 3),
+            "slg": round(row.slg, 3),
+            "hr": int(row.HR),
+            "sb": int(row.SB),
+            "ops_plus": round(row.ops_plus),
+        }
+    return {
+        "ip": round(row.ip, 1),
+        "era": round(row.era, 2),
+        "so": int(row.p_SO),
+        "bb": int(row.p_BB),
+        "gs": int(row.p_GS),
+        "sv": int(row.p_SV),
+        "era_minus": round(row.era_minus),
+    }
+
+
+def _short(row, kind: str) -> dict:
+    """A comparable's rookie line, short."""
+    if kind == "hitter":
+        return {
+            "pa": int(row.pa),
+            "avg": round(row.avg, 3),
+            "hr": int(row.HR),
+            "ops_plus": round(row.ops_plus),
+        }
+    return {
+        "ip": round(row.ip),
+        "era": round(row.era, 2),
+        "so": int(row.p_SO),
+        "era_minus": round(row.era_minus),
+    }
+
+
+def report(r: pd.DataFrame, t: dict[str, pd.DataFrame]) -> dict:
+    """The final models (fitted on every rookie whose nine seasons are in) and the latest rookie classes."""
+    last = int(r.yearID.max())
+    classes = list(range(last - CLASSES + 1, last + 1))
+    career = t["AllstarFull"].drop_duplicates(["playerID", "yearID"])
+    out = {
+        "classes": {str(y): {} for y in classes},
+        "age_curve": {},
+        "last_season": last,
+        "fitted_on": f"{FIRST}-{TEST_LAST}",
+    }
+    for kind in ("hitter", "pitcher"):
+        d = r[(r.kind == kind) & r.age.notna()].reset_index(drop=True)
+        fit = d.yearID <= TEST_LAST
+        X, ks = features(d, kind, fit)
+        model = _logit(X[fit], d.star[fit])
+        d["p"] = model.predict_proba(X)[:, 1]
+        actual, expected = _luck(d, kind, ks)
+        # comparables: the nearest historical rookies in the model's own terms (each input standardized and
+        # weighted by how much it moves the odds)
+        scaler, lr = model[0], model[-1]
+        Z = scaler.transform(X) * np.abs(lr.coef_[0])
+        pool = np.flatnonzero(fit.to_numpy())
+        as_career = career.groupby("playerID").size()
+        as_so_far = career.merge(
+            d[["playerID", "yearID"]].rename(columns={"yearID": "rookie"}), on="playerID"
+        )
+        so_far = as_so_far[as_so_far.yearID > as_so_far.rookie].groupby(["playerID", "rookie"]).size()
+        for y in classes:
+            rows = []
+            for i in np.flatnonzero((d.yearID == y).to_numpy()):
+                row = d.iloc[i]
+                dist = np.sqrt(((Z[pool] - Z[i]) ** 2).sum(axis=1))
+                comps = []
+                for j in pool[np.argsort(dist)[:COMPARABLES]]:
+                    c = d.iloc[j]
+                    comps.append(
+                        {
+                            "name": f"{c.nameFirst} {c.nameLast}",
+                            "bbref": _text(c.bbrefID),
+                            "year": int(c.yearID),
+                            "age": int(c.age),
+                            "team": _text(c.team),
+                            "line": _short(c, kind),
+                            "allstar_next": int(c.allstar_next),
+                            "allstar_career": int(as_career.get(c.playerID, 0)),
+                        }
+                    )
+                abroad = row.birthCountry in ABROAD and row.age >= 24
+                rows.append(
+                    {
+                        "id": row.playerID,
+                        "name": f"{row.nameFirst} {row.nameLast}",
+                        "bbref": _text(row.bbrefID),
+                        "team": _text(row.team),
+                        "age": int(row.age),
+                        "born": _text(row.birthCountry),
+                        "position": row.position.upper()
+                        if kind == "hitter"
+                        else ("SP" if row.starter >= 0.5 else "RP"),
+                        "line": _line(row, kind),
+                        "p": round(float(row.p), 4),
+                        "luck": {
+                            "actual": round(float(actual[i]), 3),
+                            "expected": round(float(expected[i]), 3),
+                        },
+                        "roy_share": round(float(row.roy_share), 3),
+                        "allstar_so_far": int(so_far.get((row.playerID, y), 0)),
+                        "abroad": bool(abroad),
+                        "comparables": comps,
+                    }
+                )
+            out["classes"][str(y)][kind] = sorted(rows, key=lambda x: -x["p"])
+        # how the chance of stardom falls with a rookie's age, 1932 to the last complete class
+        h = d[fit].assign(a=d.age.clip(lower=20, upper=29))
+        curve = h.groupby("a").agg(rookies=("star", "size"), stars=("star", "sum")).reset_index()
+        out["age_curve"][kind] = [
+            {"age": int(a), "rookies": int(n), "stars": int(s), "rate": float(s / n)}
+            for a, n, s in curve.itertuples(index=False)
+        ]
+        out[f"{kind}_inputs"] = {c: round(float(v), 3) for c, v in zip(X.columns, lr.coef_[0], strict=True)}
+    return out
+
+
+def export(rep: dict, lahman: str) -> list[Path]:
+    """The report's files for the site (one per rookie class, plus an index) and its summary for the notes."""
+    import json
+
+    from whiff_lab.export import SITE_DATA, rounded
+
+    folder = SITE_DATA / "rookies"
+    folder.mkdir(parents=True, exist_ok=True)
+    paths = []
+    for year, groups in rep["classes"].items():
+        path = folder / f"{year}.json"
+        path.write_text(json.dumps(rounded(groups), separators=(",", ":"), sort_keys=True) + "\n")
+        paths.append(path)
+    tops = {y: {k: [x["name"] for x in rows[:3]] for k, rows in g.items()} for y, g in rep["classes"].items()}
+    index = {
+        "classes": sorted(rep["classes"], reverse=True),
+        "age_curve": rep["age_curve"],
+        "fitted_on": rep["fitted_on"],
+        "last_season": rep["last_season"],
+        "lahman": lahman,
+        "counts": {y: {k: len(rows) for k, rows in g.items()} for y, g in rep["classes"].items()},
+        "top": tops,
+    }
+    path = folder / "index.json"
+    path.write_text(json.dumps(rounded(index), separators=(",", ":"), sort_keys=True) + "\n")
+    paths.append(path)
+    summary = {**index, "inputs": {k: rep[f"{k}_inputs"] for k in ("hitter", "pitcher")}}
+    path = ROOT / "results" / "rookies_report.json"
+    path.write_text(json.dumps(rounded(summary), indent=1) + "\n")
+    paths.append(path)
+    return paths

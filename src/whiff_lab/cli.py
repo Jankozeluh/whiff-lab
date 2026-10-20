@@ -15,14 +15,14 @@ import time
 
 from whiff_lab.data import WORK
 
-STEPS = ("fetch", "parse", "evaluate", "export", "notes")
+STEPS = ("fetch", "parse", "evaluate", "export", "rookies", "notes")
 
 
 def main() -> None:
     ap = argparse.ArgumentParser(
         prog="whiff-lab", description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
     )
-    ap.add_argument("step", choices=[*STEPS, "all", "rookies"])
+    ap.add_argument("step", choices=[*STEPS, "all"])
     args = ap.parse_args()
     for step in STEPS if args.step == "all" else (args.step,):
         t = time.time()
@@ -33,7 +33,7 @@ def main() -> None:
             commit = fetch()
             from whiff_lab.data import record_source
 
-            record_source(commit)
+            record_source(commit=commit)
             print("Retrosheet (official release, Chadwick Bureau mirror) at commit", commit)
         elif step == "parse":
             from whiff_lab.data import build
@@ -58,16 +58,20 @@ def main() -> None:
             f = run()
             print(f"  {f['summary']['games_used']:,} games, {len(f['comebacks'])} comebacks listed")
         elif step == "rookies":
+            from whiff_lab.data import record_source
             from whiff_lab.evaluate import save
-            from whiff_lab.rookies import fetch, rookies, tables, test
+            from whiff_lab.pitches import build as pitch_counts
+            from whiff_lab.rookies import export, fetch, report, rookies, tables, test, test_pitches
 
-            r = rookies(tables(fetch()))
+            path = fetch()
+            record_source(lahman=path.name)
+            lahman = tables(path)
+            r = rookies(lahman)
             r.to_parquet(WORK / "rookies.parquet", index=False)
             print(" ", save(test(r), "rookies_test"))
-            from whiff_lab.pitches import build as pitch_counts
-            from whiff_lab.rookies import test_pitches
-
             print(" ", save(test_pitches(r, pitch_counts()), "rookies_pitches_test"))
+            for p in export(report(r, lahman), path.name):
+                print(" ", p)
         elif step == "notes":
             from whiff_lab.site import build_notes
 

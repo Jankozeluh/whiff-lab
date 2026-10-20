@@ -59,3 +59,121 @@ def test_page_numbers():
     ) == ("15,211,482 · 0.467 · 1908 · 10.8% · 50%")
     assert fmt("1952-06-29", "date") == "June 29, 1952"
     assert fmt(1 / 14396, "onein") == "1 in 14,000"
+
+
+def test_a_rookie_season_is_the_one_that_passes_the_limits():
+    from whiff_lab.rookies import rookies
+
+    def bat(year, ab, so=20):
+        return {
+            "playerID": "kidxx01",
+            "yearID": year,
+            "stint": 1,
+            "teamID": "BOS",
+            "lgID": "AL",
+            "G": 50,
+            "AB": ab,
+            "R": 10,
+            "H": ab // 4,
+            "X2B": 5,
+            "X3B": 1,
+            "HR": 4,
+            "RBI": 20,
+            "SB": 2,
+            "CS": 1,
+            "BB": 10,
+            "SO": so,
+            "IBB": 0,
+            "HBP": 1,
+            "SH": 0,
+            "SF": 1,
+            "GIDP": 2,
+        }
+
+    batting = pd.DataFrame([bat(2000, 60), bat(2001, 400), bat(2002, 500)])
+    t = {
+        "Batting": batting,
+        "Pitching": pd.DataFrame(
+            {
+                c: pd.Series(dtype="object" if c in ("playerID", "teamID") else "int64")
+                for c in (
+                    "playerID",
+                    "yearID",
+                    "teamID",
+                    "W",
+                    "L",
+                    "G",
+                    "GS",
+                    "SV",
+                    "IPouts",
+                    "H",
+                    "ER",
+                    "HR",
+                    "BB",
+                    "SO",
+                    "BFP",
+                    "HBP",
+                )
+            }
+        ),
+        "Appearances": pd.DataFrame(
+            [
+                {
+                    "playerID": "kidxx01",
+                    "yearID": y,
+                    "G_all": 50,
+                    "G_p": 0,
+                    "G_c": 0,
+                    "G_1b": 0,
+                    "G_2b": 0,
+                    "G_3b": 0,
+                    "G_ss": 50,
+                    "G_lf": 0,
+                    "G_cf": 0,
+                    "G_rf": 0,
+                    "G_dh": 0,
+                }
+                for y in (2000, 2001, 2002)
+            ]
+        ),
+        "People": pd.DataFrame(
+            [
+                {
+                    "playerID": "kidxx01",
+                    "birthYear": 1980,
+                    "birthMonth": 8,
+                    "birthCountry": "USA",
+                    "nameFirst": "Kid",
+                    "nameLast": "Rookie",
+                    "retroID": "rookk001",
+                    "bbrefID": "rookiki01",
+                }
+            ]
+        ),
+        "AllstarFull": pd.DataFrame([{"playerID": "kidxx01", "yearID": y} for y in (2001, 2003, 2004)]),
+        "AwardsSharePlayers": pd.DataFrame(
+            [
+                {
+                    "awardID": "Rookie of the Year",
+                    "yearID": 2001,
+                    "playerID": "kidxx01",
+                    "pointsWon": 30,
+                    "pointsMax": 120,
+                }
+            ]
+        ),
+        "Teams": pd.DataFrame(
+            [{"yearID": y, "teamID": "BOS", "name": "Boston Red Sox"} for y in (2000, 2001, 2002)]
+        ),
+    }
+    r = rookies(t)
+    assert len(r) == 1
+    row = r.iloc[0]
+    assert (row.yearID, row.kind, row.age, row.position) == (
+        2001,
+        "hitter",
+        20,
+        "ss",
+    )  # born in August: 20 on June 30
+    assert row.allstar_next == 2 and row.star == 1  # 2003 and 2004 count, the rookie year's own does not
+    assert row.roy_share == 0.25 and row.team == "Boston Red Sox"

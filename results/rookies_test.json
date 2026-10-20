@@ -156,6 +156,56 @@
    -0.009633,
    0.002679
   ],
+  "calibration": [
+   {
+    "from": 0,
+    "to": 0.05,
+    "rookies": 461,
+    "stars": 5,
+    "said": 0.026804,
+    "happened": 0.010846
+   },
+   {
+    "from": 0.05,
+    "to": 0.1,
+    "rookies": 358,
+    "stars": 17,
+    "said": 0.072021,
+    "happened": 0.047486
+   },
+   {
+    "from": 0.1,
+    "to": 0.2,
+    "rookies": 357,
+    "stars": 49,
+    "said": 0.144644,
+    "happened": 0.137255
+   },
+   {
+    "from": 0.2,
+    "to": 0.35,
+    "rookies": 190,
+    "stars": 46,
+    "said": 0.260888,
+    "happened": 0.242105
+   },
+   {
+    "from": 0.35,
+    "to": 0.5,
+    "rookies": 71,
+    "stars": 35,
+    "said": 0.413967,
+    "happened": 0.492958
+   },
+   {
+    "from": 0.5,
+    "to": 1.0,
+    "rookies": 35,
+    "stars": 23,
+    "said": 0.639825,
+    "happened": 0.657143
+   }
+  ],
   "coefficients": {
    "age": -1.001356,
    "log_pa": 0.259907,
@@ -320,6 +370,56 @@
   "gap_model_vs_age_and_card_95": [
    -0.013895,
    -0.000676
+  ],
+  "calibration": [
+   {
+    "from": 0,
+    "to": 0.05,
+    "rookies": 958,
+    "stars": 16,
+    "said": 0.025549,
+    "happened": 0.016701
+   },
+   {
+    "from": 0.05,
+    "to": 0.1,
+    "rookies": 415,
+    "stars": 22,
+    "said": 0.072611,
+    "happened": 0.053012
+   },
+   {
+    "from": 0.1,
+    "to": 0.2,
+    "rookies": 232,
+    "stars": 25,
+    "said": 0.13914,
+    "happened": 0.107759
+   },
+   {
+    "from": 0.2,
+    "to": 0.35,
+    "rookies": 79,
+    "stars": 26,
+    "said": 0.2584,
+    "happened": 0.329114
+   },
+   {
+    "from": 0.35,
+    "to": 0.5,
+    "rookies": 25,
+    "stars": 14,
+    "said": 0.415698,
+    "happened": 0.56
+   },
+   {
+    "from": 0.5,
+    "to": 1.0,
+    "rookies": 14,
+    "stars": 5,
+    "said": 0.640317,
+    "happened": 0.357143
+   }
   ],
   "coefficients": {
    "age": -0.563393,
