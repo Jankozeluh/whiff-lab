@@ -13,6 +13,8 @@ from __future__ import annotations
 import argparse
 import time
 
+from whiff_lab.data import WORK
+
 STEPS = ("fetch", "parse", "evaluate", "export", "notes")
 
 
@@ -20,7 +22,7 @@ def main() -> None:
     ap = argparse.ArgumentParser(
         prog="whiff-lab", description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
     )
-    ap.add_argument("step", choices=[*STEPS, "all"])
+    ap.add_argument("step", choices=[*STEPS, "all", "rookies"])
     args = ap.parse_args()
     for step in STEPS if args.step == "all" else (args.step,):
         t = time.time()
@@ -55,6 +57,14 @@ def main() -> None:
 
             f = run()
             print(f"  {f['summary']['games_used']:,} games, {len(f['comebacks'])} comebacks listed")
+        elif step == "rookies":
+            from whiff_lab.evaluate import save
+            from whiff_lab.rookies import fetch, rookies, tables, test
+
+            r = rookies(tables(fetch()))
+            r.to_parquet(WORK / "rookies.parquet", index=False)
+            res = save(test(r), "rookies_test")
+            print(" ", res)
         elif step == "notes":
             from whiff_lab.site import build_notes
 

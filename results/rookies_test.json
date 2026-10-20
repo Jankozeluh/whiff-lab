@@ -1,0 +1,334 @@
+{
+ "window": 9,
+ "star": 2,
+ "train": "1932-1994",
+ "test": "1995-2016",
+ "hitter": {
+  "rookies_train": 3159,
+  "rookies_test": 1472,
+  "stars_test": 175,
+  "base_rate_train": 0.147515,
+  "shrink_strengths": {
+   "k": 34.10872,
+   "bb": 79.465133,
+   "hr": 79.15614,
+   "babip": 605.931125
+  },
+  "methods": {
+   "Back of the card: OPS+": {
+    "log_loss": 0.348172,
+    "brier": 0.101115,
+    "auc": 0.676832,
+    "top5": {
+     "picked": 110,
+     "stars_picked": 30,
+     "stars_all": 175,
+     "hit_rate": 0.272727,
+     "share_of_stars": 0.171429
+    }
+   },
+   "Back of the card: all of it": {
+    "log_loss": 0.330144,
+    "brier": 0.094872,
+    "auc": 0.730107,
+    "top5": {
+     "picked": 110,
+     "stars_picked": 43,
+     "stars_all": 175,
+     "hit_rate": 0.390909,
+     "share_of_stars": 0.245714
+    }
+   },
+   "Rookie of the Year voters": {
+    "log_loss": 0.342536,
+    "brier": 0.096786,
+    "auc": 0.649992,
+    "top5": {
+     "picked": 110,
+     "stars_picked": 46,
+     "stars_all": 175,
+     "hit_rate": 0.418182,
+     "share_of_stars": 0.262857
+    }
+   },
+   "Model (logistic)": {
+    "log_loss": 0.281907,
+    "brier": 0.083577,
+    "auc": 0.831995,
+    "top5": {
+     "picked": 110,
+     "stars_picked": 59,
+     "stars_all": 175,
+     "hit_rate": 0.536364,
+     "share_of_stars": 0.337143
+    }
+   },
+   "Model (gradient boosting)": {
+    "log_loss": 0.295499,
+    "brier": 0.089093,
+    "auc": 0.817478,
+    "top5": {
+     "picked": 110,
+     "stars_picked": 51,
+     "stars_all": 175,
+     "hit_rate": 0.463636,
+     "share_of_stars": 0.291429
+    }
+   },
+   "Model + the voters": {
+    "log_loss": 0.280078,
+    "brier": 0.082843,
+    "auc": 0.8337,
+    "top5": {
+     "picked": 110,
+     "stars_picked": 58,
+     "stars_all": 175,
+     "hit_rate": 0.527273,
+     "share_of_stars": 0.331429
+    }
+   },
+   "Nothing (the base rate)": {
+    "log_loss": 0.368152,
+    "brier": 0.105572,
+    "auc": 0.5
+   }
+  },
+  "gap_vs_card_95": [
+   -0.059347,
+   -0.037257
+  ],
+  "gap_vs_voters_95": [
+   -0.074628,
+   -0.046798
+  ],
+  "gap_card_used": "Back of the card: all of it",
+  "parts": {
+   "Age only": {
+    "log_loss": 0.314695,
+    "auc": 0.77605,
+    "top5": {
+     "picked": 110,
+     "stars_picked": 45,
+     "stars_all": 175,
+     "hit_rate": 0.409091,
+     "share_of_stars": 0.257143
+    }
+   },
+   "Age and the back of the card": {
+    "log_loss": 0.285511,
+    "auc": 0.835215,
+    "top5": {
+     "picked": 110,
+     "stars_picked": 57,
+     "stars_all": 175,
+     "hit_rate": 0.518182,
+     "share_of_stars": 0.325714
+    }
+   },
+   "Model without shrinking": {
+    "log_loss": 0.286137,
+    "auc": 0.830431,
+    "top5": {
+     "picked": 110,
+     "stars_picked": 60,
+     "stars_all": 175,
+     "hit_rate": 0.545455,
+     "share_of_stars": 0.342857
+    }
+   },
+   "Model without age": {
+    "log_loss": 0.321996,
+    "auc": 0.745161,
+    "top5": {
+     "picked": 110,
+     "stars_picked": 46,
+     "stars_all": 175,
+     "hit_rate": 0.418182,
+     "share_of_stars": 0.262857
+    }
+   }
+  },
+  "gap_age_vs_voters_95": [
+   -0.043221,
+   -0.012366
+  ],
+  "gap_model_vs_age_and_card_95": [
+   -0.009633,
+   0.002679
+  ],
+  "coefficients": {
+   "age": -1.001356,
+   "log_pa": 0.259907,
+   "log_pa_before": 0.035096,
+   "defense": 0.207363,
+   "catcher": -0.010218,
+   "sb_rate": 0.081947,
+   "k_skill": -0.449675,
+   "bb_skill": 0.002694,
+   "hr_skill": 0.622801,
+   "babip_skill": 0.318213
+  }
+ },
+ "pitcher": {
+  "rookies_train": 2644,
+  "rookies_test": 1723,
+  "stars_test": 108,
+  "base_rate_train": 0.085855,
+  "shrink_strengths": {
+   "k": 102.940501,
+   "bb": 147.999899,
+   "hr": 919.562024
+  },
+  "methods": {
+   "Back of the card: ERA-": {
+    "log_loss": 0.233183,
+    "brier": 0.058845,
+    "auc": 0.622443,
+    "top5": {
+     "picked": 110,
+     "stars_picked": 12,
+     "stars_all": 108,
+     "hit_rate": 0.109091,
+     "share_of_stars": 0.111111
+    }
+   },
+   "Back of the card: all of it": {
+    "log_loss": 0.217623,
+    "brier": 0.056177,
+    "auc": 0.743372,
+    "top5": {
+     "picked": 110,
+     "stars_picked": 23,
+     "stars_all": 108,
+     "hit_rate": 0.209091,
+     "share_of_stars": 0.212963
+    }
+   },
+   "Rookie of the Year voters": {
+    "log_loss": 0.231036,
+    "brier": 0.057944,
+    "auc": 0.60696,
+    "top5": {
+     "picked": 110,
+     "stars_picked": 26,
+     "stars_all": 108,
+     "hit_rate": 0.236364,
+     "share_of_stars": 0.240741
+    }
+   },
+   "Model (logistic)": {
+    "log_loss": 0.192738,
+    "brier": 0.05154,
+    "auc": 0.810704,
+    "top5": {
+     "picked": 110,
+     "stars_picked": 36,
+     "stars_all": 108,
+     "hit_rate": 0.327273,
+     "share_of_stars": 0.333333
+    }
+   },
+   "Model (gradient boosting)": {
+    "log_loss": 0.225455,
+    "brier": 0.058605,
+    "auc": 0.742444,
+    "top5": {
+     "picked": 110,
+     "stars_picked": 22,
+     "stars_all": 108,
+     "hit_rate": 0.2,
+     "share_of_stars": 0.203704
+    }
+   },
+   "Model + the voters": {
+    "log_loss": 0.192502,
+    "brier": 0.051498,
+    "auc": 0.813187,
+    "top5": {
+     "picked": 110,
+     "stars_picked": 37,
+     "stars_all": 108,
+     "hit_rate": 0.336364,
+     "share_of_stars": 0.342593
+    }
+   },
+   "Nothing (the base rate)": {
+    "log_loss": 0.238028,
+    "brier": 0.059289,
+    "auc": 0.5
+   }
+  },
+  "gap_vs_card_95": [
+   -0.032444,
+   -0.017365
+  ],
+  "gap_vs_voters_95": [
+   -0.050649,
+   -0.025707
+  ],
+  "gap_card_used": "Back of the card: all of it",
+  "parts": {
+   "Age only": {
+    "log_loss": 0.216857,
+    "auc": 0.743699,
+    "top5": {
+     "picked": 110,
+     "stars_picked": 21,
+     "stars_all": 108,
+     "hit_rate": 0.190909,
+     "share_of_stars": 0.194444
+    }
+   },
+   "Age and the back of the card": {
+    "log_loss": 0.200173,
+    "auc": 0.802167,
+    "top5": {
+     "picked": 110,
+     "stars_picked": 32,
+     "stars_all": 108,
+     "hit_rate": 0.290909,
+     "share_of_stars": 0.296296
+    }
+   },
+   "Model without shrinking": {
+    "log_loss": 0.193906,
+    "auc": 0.809569,
+    "top5": {
+     "picked": 110,
+     "stars_picked": 35,
+     "stars_all": 108,
+     "hit_rate": 0.318182,
+     "share_of_stars": 0.324074
+    }
+   },
+   "Model without age": {
+    "log_loss": 0.202933,
+    "auc": 0.780381,
+    "top5": {
+     "picked": 110,
+     "stars_picked": 34,
+     "stars_all": 108,
+     "hit_rate": 0.309091,
+     "share_of_stars": 0.314815
+    }
+   }
+  },
+  "gap_age_vs_voters_95": [
+   -0.021836,
+   -0.004945
+  ],
+  "gap_model_vs_age_and_card_95": [
+   -0.013895,
+   -0.000676
+  ],
+  "coefficients": {
+   "age": -0.563393,
+   "log_bf": 0.383406,
+   "starter": 0.165913,
+   "log_outs_before": 0.051255,
+   "k_skill": 0.618225,
+   "bb_skill": -0.188048,
+   "hr_skill": -0.164966
+  }
+ }
+}
