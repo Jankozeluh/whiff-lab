@@ -125,16 +125,20 @@ def home_field() -> pd.DataFrame:
 
 
 def extra_innings() -> pd.DataFrame:
-    """Extra-inning games before and since the runner on second: how long they last, who wins."""
-    return duckdb.sql(f"""
+    """Extra-inning games before (1908-2019) and since (2020 on) the runner on second: how long they last,
+    who wins, with a 90% interval for the home team's share."""
+    d = duckdb.sql(f"""
         select case when extra_runner then 'runner' else 'before' end as rule,
                count(*) as games, avg(home_win) as home_win,
                avg(case when last_inning = 10 then 1 else 0 end) as over_in_10th,
                avg(last_inning) as mean_last_inning, max(last_inning) as longest
         from '{WORK / "games.parquet"}'
-        where used and last_inning >= 10 and year >= 2010
+        where used and last_inning >= 10
         group by 1 order by 1
     """).df()
+    se = np.sqrt(d.home_win * (1 - d.home_win) / d.games)
+    d["home_win_lo"], d["home_win_hi"] = d.home_win - 1.645 * se, d.home_win + 1.645 * se
+    return d
 
 
 def summary() -> dict:
@@ -153,3 +157,22 @@ def summary() -> dict:
         "rpg_low": rpg.loc[rpg.rpg.idxmin()].to_dict(),
         "rpg_high": rpg.loc[rpg.rpg.idxmax()].to_dict(),
     }
+
+
+def tail_calibration(model: Boosted, c: pd.DataFrame) -> list[dict]:
+    """Below 1 in 50: what the final model expected in total, and what happened, counting the long-shot side
+    (home or visitors) of every state. In-sample: the model has seen these games."""
+    p = model.predict(c, floor=1e-6)
+    out = []
+    for lo, hi in ((0, 1e-4), (1e-4, 5e-4), (5e-4, 1e-3), (1e-3, 5e-3), (5e-3, 1e-2), (1e-2, 2e-2)):
+        home, away = (p >= lo) & (p < hi), (1 - p >= lo) & (1 - p < hi)
+        out.append(
+            {
+                "from": lo,
+                "to": hi,
+                "plate_appearances": int(c.n[home].sum() + c.n[away].sum()),
+                "expected": float((p[home] * c.n[home]).sum() + ((1 - p[away]) * c.n[away]).sum()),
+                "happened": int(c.w[home].sum() + (c.n[away] - c.w[away]).sum()),
+            }
+        )
+    return out

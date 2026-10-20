@@ -28,6 +28,7 @@ from whiff_lab.lab import (
     home_field,
     predictions_for_every_plate_appearance,
     summary,
+    tail_calibration,
 )
 
 SITE_DATA = ROOT / "site" / "data"
@@ -143,7 +144,7 @@ def describe(row) -> str:
         if len(on) == 1
         else f"runners on {on[0]} and {on[1]}"
     )
-    return f"down {other}-{own}, {half} of the {inning}{suffix}, {outs}, {runners}"
+    return f"down {other}–{own}, {half} of the {inning}{suffix}, {outs}, {runners}"
 
 
 def findings(cb: pd.DataFrame, labels: dict, model) -> dict:
@@ -174,6 +175,8 @@ def findings(cb: pd.DataFrame, labels: dict, model) -> dict:
                 "home_runs": int(r.home_runs),
                 "winner": label_of(labels, winner, r.year),
                 "loser": label_of(labels, loser, r.year),
+                "winner_runs": int(max(r.away_runs, r.home_runs)),
+                "loser_runs": int(min(r.away_runs, r.home_runs)),
                 "low": float(r.win_p),
                 "moment": describe(r),
             }
@@ -196,7 +199,9 @@ def findings(cb: pd.DataFrame, labels: dict, model) -> dict:
                 "bottom": s[s.bottom == 1].p.round(4).tolist(),
             }
         )
+    both = seasons.dropna(subset=["under10"])
     return {
+        "comeback_rpg_r": float(np.corrcoef(both.under10, both.rpg)[0, 1]),
         "seasons": json.loads(seasons.round(4).to_json(orient="records")),
         "comebacks": top,
         "comeback_share": {
@@ -211,6 +216,40 @@ def findings(cb: pd.DataFrame, labels: dict, model) -> dict:
             {"key": e.key, "name": e.name, "first": e.first, "last": e.last, "note": e.note} for e in ERAS
         ],
     }
+
+
+SPOTS = (
+    ("First pitch", (1, 0, 0, 0, 0)),
+    ("Home team down 1, bottom of the 9th, nobody on, nobody out", (9, 1, 0, 0, -1)),
+    ("Home team up 1, top of the 9th, nobody on, nobody out", (9, 0, 0, 0, 1)),
+    ("Tied, bottom of the 9th, nobody on, nobody out", (9, 1, 0, 0, 0)),
+    ("Home team up 3, top of the 7th, nobody on, nobody out", (7, 0, 0, 0, 3)),
+    ("Home team down 2, bottom of the 8th, bases loaded, one out", (8, 1, 1, 7, -2)),
+)
+
+
+def spots(table: pd.DataFrame) -> list[dict]:
+    """A few famous spots in every era: the odds, the 90% interval and the number of games behind them."""
+    out = []
+    for name, (inning, bottom, outs, bases, diff) in SPOTS:
+        i = int(grid_index(inning, bottom, outs, bases, diff))
+        rows = table.groupby("era").nth(i).set_index("era")
+        out.append(
+            {
+                "name": name,
+                "cell": [inning, bottom, outs, bases, diff],
+                "eras": {
+                    e.key: {
+                        "p": round(float(rows.p[e.key]), 4),
+                        "lo": round(float(rows.lo[e.key]), 4),
+                        "hi": round(float(rows.hi[e.key]), 4),
+                        "n": int(rows.n[e.key]),
+                    }
+                    for e in ERAS
+                },
+            }
+        )
+    return out
 
 
 def run() -> dict:
@@ -229,6 +268,8 @@ def run() -> dict:
     for e in f["eras"]:
         e["k"] = round(float(era_k[e["key"]]), 1)
         e["games"] = int(((games.year >= e["first"]) & (games.year <= e["last"]) & games.used).sum())
+    f["spots"] = spots(table)
+    f["tail"] = tail_calibration(model, c)
     f["summary"] = summary()
     write(SITE_DATA / "findings.json", f)
     RESULTS.mkdir(exist_ok=True)

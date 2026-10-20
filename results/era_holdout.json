@@ -6,8 +6,8 @@
    "rpg": 3.842208154482447,
    "plate_appearances": 1048703,
    "Lookup table": 0.4743905709495546,
-   "Logistic regression": 0.47540543743462643,
-   "Gradient boosting": 0.4740578441718966,
+   "Logistic regression": 0.4754054374346265,
+   "Gradient boosting": 0.47405784417191643,
    "own era (in-sample)": 0.47018852186512605
   },
   {
@@ -16,8 +16,8 @@
    "rpg": 4.843448463318306,
    "plate_appearances": 1973856,
    "Lookup table": 0.47674097130118226,
-   "Logistic regression": 0.47747337429271136,
-   "Gradient boosting": 0.47720857220545154,
+   "Logistic regression": 0.4774733742927113,
+   "Gradient boosting": 0.4772085722054447,
    "own era (in-sample)": 0.4739165753490349
   },
   {
@@ -27,7 +27,7 @@
    "plate_appearances": 1655780,
    "Lookup table": 0.47676897221680853,
    "Logistic regression": 0.47807363521857593,
-   "Gradient boosting": 0.47702497179128567,
+   "Gradient boosting": 0.4770249717912852,
    "own era (in-sample)": 0.47445135938910227
   },
   {
@@ -37,7 +37,7 @@
    "plate_appearances": 959912,
    "Lookup table": 0.482557724612143,
    "Logistic regression": 0.4832319564212439,
-   "Gradient boosting": 0.4826251264343776,
+   "Gradient boosting": 0.4826251264343893,
    "own era (in-sample)": 0.4792856421682231
   },
   {
@@ -47,8 +47,8 @@
    "plate_appearances": 3692025,
    "Lookup table": 0.48308373713962605,
    "Logistic regression": 0.48443165709593394,
-   "Gradient boosting": 0.4833292447366961,
-   "own era (in-sample)": 0.4817653946901018
+   "Gradient boosting": 0.48332924473668987,
+   "own era (in-sample)": 0.48176539469010177
   },
   {
    "era": "offense",
@@ -57,18 +57,18 @@
    "plate_appearances": 2313611,
    "Lookup table": 0.47575899409452443,
    "Logistic regression": 0.47678771505020995,
-   "Gradient boosting": 0.47622110587343314,
+   "Gradient boosting": 0.4762211058734388,
    "own era (in-sample)": 0.4736504006895034
   },
   {
    "era": "strikeout",
    "name": "Strikeouts and relievers",
-   "rpg": 4.488815834875992,
+   "rpg": 4.488815834875993,
    "plate_appearances": 2601150,
-   "Lookup table": 0.4694402698985186,
+   "Lookup table": 0.46944026989851867,
    "Logistic regression": 0.470651580779004,
-   "Gradient boosting": 0.469473062392395,
-   "own era (in-sample)": 0.467735309827524
+   "Gradient boosting": 0.46947306239240233,
+   "own era (in-sample)": 0.46773530982752404
   },
   {
    "era": "runner",
@@ -77,8 +77,8 @@
    "plate_appearances": 966445,
    "Lookup table": 0.4681684766118345,
    "Logistic regression": 0.46902884692734453,
-   "Gradient boosting": 0.468302255372925,
-   "own era (in-sample)": 0.46400793717527355
+   "Gradient boosting": 0.4683022553729246,
+   "own era (in-sample)": 0.4640079371752736
   }
  ]
 }

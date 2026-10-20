@@ -8,6 +8,7 @@ kept in data/raw/ and never fetched twice: a rebuild asks git for what changed a
 from __future__ import annotations
 
 import csv
+import json
 import subprocess
 from concurrent.futures import ProcessPoolExecutor
 from pathlib import Path
@@ -59,6 +60,13 @@ def fetch() -> str:
         git("fetch", "--depth", "1", "origin", BRANCH)
         git("reset", "--hard", f"origin/{BRANCH}")
     return git("rev-parse", "HEAD")
+
+
+def record_source(commit: str) -> None:
+    """Write down which release the results come from (the rebuild compares it with the mirror's)."""
+    path = ROOT / "results" / "source.json"
+    path.parent.mkdir(exist_ok=True)
+    path.write_text(json.dumps({"mirror": MIRROR, "branch": BRANCH, "commit": commit}, indent=1) + "\n")
 
 
 def seasons() -> list[int]:

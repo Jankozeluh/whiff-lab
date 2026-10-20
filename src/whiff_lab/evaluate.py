@@ -108,9 +108,11 @@ def holdout() -> dict:
         "rare states (seen < 100 times in training)": seen < 100,
         "ninth inning": (test.inning == 9).to_numpy(),
         "extra innings, 2017-2019": ((test.inning == 10) & (test.year < 2020)).to_numpy(),
-        "extra innings, 2020-2025 (runner on second)": ((test.inning == 10) & (test.year >= 2020)).to_numpy(),
+        "extra innings since 2020 (runner on second)": ((test.inning == 10) & (test.year >= 2020)).to_numpy(),
     }
+    re = run_expectancy(range(1908, TRAIN_LAST + 1))
     result = {
+        "run_expectancy": {str(k): v for k, v in sorted(re.items())},
         "train": f"1908-{TRAIN_LAST}",
         "test": f"{TEST_FIRST}-{int(test.year.max())}",
         "test_games": int(test.game_id.nunique()),

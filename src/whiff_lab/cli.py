@@ -28,7 +28,11 @@ def main() -> None:
         if step == "fetch":
             from whiff_lab.data import fetch
 
-            print("Retrosheet (official release, Chadwick Bureau mirror) at commit", fetch())
+            commit = fetch()
+            from whiff_lab.data import record_source
+
+            record_source(commit)
+            print("Retrosheet (official release, Chadwick Bureau mirror) at commit", commit)
         elif step == "parse":
             from whiff_lab.data import build
 
@@ -52,7 +56,7 @@ def main() -> None:
             f = run()
             print(f"  {f['summary']['games_used']:,} games, {len(f['comebacks'])} comebacks listed")
         elif step == "notes":
-            from whiff_lab.notes import build_notes
+            from whiff_lab.site import build_notes
 
             for path in build_notes():
                 print(" ", path)
